@@ -1,0 +1,43 @@
+<svg
+  width="900"
+  height="280"
+  viewBox="0 0 900 280"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <rect width="900" height="280" fill="#F7F8F6"/>
+
+  <text
+    x="60"
+    y="125"
+    fill="#0F2933"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="100"
+    font-weight="700"
+    letter-spacing="-4"
+  >
+    ROVE
+  </text>
+
+  <text
+    x="64"
+    y="190"
+    fill="#0F2933"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="38"
+    font-weight="600"
+    letter-spacing="13"
+  >
+    ADDIS
+  </text>
+
+  <text
+    x="65"
+    y="235"
+    fill="#56636A"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="20"
+  >
+    Your Addis commute, shared.
+  </text>
+</svg>

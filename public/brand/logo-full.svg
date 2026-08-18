@@ -1,0 +1,67 @@
+<svg
+  width="1000"
+  height="300"
+  viewBox="0 0 1000 300"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <rect width="1000" height="300" fill="#F7F8F6"/>
+
+  <g transform="translate(40 45)">
+    <path
+      d="M80 105C80 66.34 111.34 35 150 35C188.66 35 220 66.34 220 105"
+      stroke="#0F2933"
+      stroke-width="32"
+      stroke-linecap="round"
+    />
+
+    <path
+      d="M80 105C80 143.66 111.34 175 150 175C188.66 175 220 143.66 220 105"
+      stroke="#28B5B1"
+      stroke-width="32"
+      stroke-linecap="round"
+    />
+
+    <circle
+      cx="150"
+      cy="105"
+      r="23"
+      fill="#F7F8F6"
+    />
+  </g>
+
+  <text
+    x="300"
+    y="142"
+    fill="#0F2933"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="92"
+    font-weight="700"
+    letter-spacing="-3"
+  >
+    ROVE
+  </text>
+
+  <text
+    x="305"
+    y="205"
+    fill="#0F2933"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="35"
+    font-weight="600"
+    letter-spacing="11"
+  >
+    ADDIS LABS
+  </text>
+
+  <text
+    x="307"
+    y="247"
+    fill="#56636A"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="18"
+    letter-spacing="2"
+  >
+    SOFTWARE · PRODUCTS · INTELLIGENT SYSTEMS
+  </text>
+</svg>
