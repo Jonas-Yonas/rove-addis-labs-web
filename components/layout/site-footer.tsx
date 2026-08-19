@@ -1,10 +1,19 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Brand } from "@/components/shared/brand";
 import { brand } from "@/config/brand";
 import { mainNavigation } from "@/config/navigation";
 
 export function SiteFooter() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/dashboard")) {
+    return null;
+  }
+
   return (
     <footer className="border-t border-border/60">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
