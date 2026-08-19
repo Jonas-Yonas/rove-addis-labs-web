@@ -1,31 +1,12 @@
-import { FolderKanban, Plus, Search } from "lucide-react";
+import { FolderKanban, Search } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProjectCreateDialog } from "@/components/dashboard/project-create-dialog";
+import { getProjects } from "@/lib/projects/queries";
 
-const projects = [
-  {
-    id: "1",
-    name: "Rove Addis",
-    description: "Urban mobility and ride-sharing platform.",
-    status: "Active",
-  },
-  {
-    id: "2",
-    name: "EthioGigs",
-    description: "Micro-gigs marketplace for Ethiopia.",
-    status: "Active",
-  },
-  {
-    id: "3",
-    name: "AI Architect",
-    description: "AI-powered software architecture workspace.",
-    status: "Planning",
-  },
-];
+export default async function ProjectsPage() {
+  const projects = await getProjects();
 
-export default function ProjectsPage() {
   return (
     <div className="w-full min-w-0 space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -68,7 +49,7 @@ export default function ProjectsPage() {
               </span>
             </div>
 
-            <h2 className="mt-5 truncate font-semibold">{project.name}</h2>
+            <h2 className="mt-5 truncate font-semibold">{project.title}</h2>
 
             <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
               {project.description}
