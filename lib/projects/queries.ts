@@ -1,22 +1,57 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Project } from "./types";
 
-export async function getProjects(): Promise<Project[]> {
+export interface GetProjectsOptions {
+  search?: string;
+  status?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export async function getProjects({
+  search,
+  status,
+  page = 1,
+  pageSize = 9,
+}: GetProjectsOptions = {}) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  let query = supabase
     .from("projects")
     .select(
-      "id, title, slug, client_name, description, status, featured, created_at, updated_at",
+      "id, title, slug, client_name, description, status, featured, cover_image_url, created_at, updated_at",
+      { count: "exact" },
     )
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (search?.trim()) {
+    const value = search.trim();
+
+    query = query.or(`title.ilike.%${value}%,client_name.ilike.%${value}%`);
+  }
+
+  if (status && status !== "ALL") {
+    query = query.eq("status", status);
+  }
+
+  const { data, error, count } = await query;
 
   if (error) {
     console.error("Failed to fetch projects:", error);
     throw new Error("Failed to fetch projects.");
   }
 
-  return data as Project[];
+  return {
+    data,
+    count: count ?? 0,
+    page,
+    pageSize,
+    totalPages: Math.ceil((count ?? 0) / pageSize),
+  };
 }
 
 export async function getProjectById(id: string): Promise<Project | null> {

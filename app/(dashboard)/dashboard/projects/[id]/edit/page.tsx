@@ -27,7 +27,10 @@ export default async function ProjectEditPage({
     <div className="w-full min-w-0 space-y-6">
       <div>
         <Button variant="ghost" size="sm">
-          <Link href={`/dashboard/projects/${project.id}`}>
+          <Link
+            href={`/dashboard/projects/${project.id}`}
+            className="flex items-center gap-2"
+          >
             <ArrowLeft className="size-4" />
             Back to project
           </Link>

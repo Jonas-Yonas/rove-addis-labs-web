@@ -96,9 +96,11 @@ export async function updateProject(id: string, formData: FormData) {
   const clientName = String(formData.get("client_name") ?? "").trim();
   const websiteUrl = String(formData.get("website_url") ?? "").trim();
   const content = String(formData.get("content") ?? "").trim();
-  const coverImageUrl = String(formData.get("cover_image_url") ?? "").trim();
   const status = String(formData.get("status") ?? "PLANNED");
   const featured = formData.get("featured") === "true";
+
+  // This is now a URL/path, NOT a File.
+  const coverImageUrl = String(formData.get("cover_image_url") ?? "").trim();
 
   if (!id) {
     return {
@@ -146,19 +148,21 @@ export async function updateProject(id: string, formData: FormData) {
     };
   }
 
+  const updateData = {
+    title,
+    slug,
+    description,
+    client_name: clientName || null,
+    website_url: websiteUrl || null,
+    content: content || null,
+    status,
+    featured,
+    ...(coverImageUrl ? { cover_image_url: coverImageUrl } : {}),
+  };
+
   const { error } = await supabase
     .from("projects")
-    .update({
-      title,
-      slug,
-      description,
-      client_name: clientName || null,
-      website_url: websiteUrl || null,
-      content: content || null,
-      cover_image_url: coverImageUrl || null,
-      status,
-      featured,
-    })
+    .update(updateData)
     .eq("id", id);
 
   if (error) {
@@ -167,6 +171,107 @@ export async function updateProject(id: string, formData: FormData) {
     return {
       success: false,
       error: "Unable to update project. Please try again.",
+    };
+  }
+
+  revalidatePath("/dashboard/projects");
+  revalidatePath(`/dashboard/projects/${id}`);
+  revalidatePath(`/dashboard/projects/${id}/edit`);
+
+  return {
+    success: true,
+  };
+}
+
+export async function deleteProject(id: string) {
+  const supabase = await createClient();
+
+  if (!id) {
+    return {
+      success: false,
+      error: "Project ID is required.",
+    };
+  }
+
+  // Fetch the project first so we can clean up its cover image.
+  const { data: project, error: fetchError } = await supabase
+    .from("projects")
+    .select("id, cover_image_url")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (fetchError) {
+    console.error("Failed to fetch project before deletion:", fetchError);
+
+    return {
+      success: false,
+      error: "Unable to delete project. Please try again.",
+    };
+  }
+
+  if (!project) {
+    return {
+      success: false,
+      error: "Project not found.",
+    };
+  }
+
+  // Remove the cover image from Supabase Storage.
+  if (project.cover_image_url) {
+    try {
+      const url = new URL(project.cover_image_url);
+
+      const marker = "/storage/v1/object/public/rove-labs-project-covers/";
+
+      const markerIndex = url.pathname.indexOf(marker);
+
+      if (markerIndex !== -1) {
+        const storagePath = decodeURIComponent(
+          url.pathname.slice(markerIndex + marker.length),
+        );
+
+        if (storagePath) {
+          const { error: storageError } = await supabase.storage
+            .from("rove-labs-project-covers")
+            .remove([storagePath]);
+
+          if (storageError) {
+            console.error(
+              "Failed to delete project cover image:",
+              storageError,
+            );
+
+            return {
+              success: false,
+              error:
+                "Unable to delete the project cover image. Project was not deleted.",
+            };
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Failed to parse project cover URL:", error);
+
+      return {
+        success: false,
+        error:
+          "Unable to process the project cover image. Project was not deleted.",
+      };
+    }
+  }
+
+  // Delete the database record.
+  const { error: deleteError } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", id);
+
+  if (deleteError) {
+    console.error("Failed to delete project:", deleteError);
+
+    return {
+      success: false,
+      error: "Unable to delete project. Please try again.",
     };
   }
 

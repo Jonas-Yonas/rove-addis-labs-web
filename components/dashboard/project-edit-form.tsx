@@ -18,6 +18,7 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
   return (
     <ProjectForm
       action={action}
+      storagePathPrefix={`projects/${project.id}`}
       submitLabel="Save changes"
       pendingLabel="Saving..."
       showContentFields

@@ -2,13 +2,14 @@
 
 import { useState, useTransition } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { createClient } from "@/lib/supabase/client";
 
 import type { ProjectStatus } from "@/lib/projects/types";
+import { FormActions } from "../shared/form-actions";
 
 interface ProjectFormProps {
   action: (formData: FormData) => Promise<{
@@ -28,6 +29,7 @@ interface ProjectFormProps {
     cover_image_url?: string | null;
   };
   showContentFields?: boolean;
+  storagePathPrefix?: string;
   onSuccess?: () => void;
 }
 
@@ -38,12 +40,30 @@ const statuses: ProjectStatus[] = [
   "ARCHIVED",
 ];
 
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+function getFileExtension(file: File) {
+  switch (file.type) {
+    case "image/jpeg":
+      return "jpg";
+    case "image/png":
+      return "png";
+    case "image/webp":
+      return "webp";
+    default:
+      return null;
+  }
+}
+
 export function ProjectForm({
   action,
   submitLabel = "Save project",
   pendingLabel = "Saving...",
   initialValues,
   showContentFields = false,
+  storagePathPrefix = "projects",
   onSuccess,
 }: ProjectFormProps) {
   const [error, setError] = useState<string | null>(null);
@@ -55,17 +75,74 @@ export function ProjectForm({
     const form = event.currentTarget;
     const formData = new FormData(form);
 
+    const coverImage = formData.get("cover_image");
+
+    // Never send the actual file through the Server Action.
+    formData.delete("cover_image");
+
     setError(null);
 
     startTransition(async () => {
-      const result = await action(formData);
+      try {
+        if (coverImage instanceof File && coverImage.size > 0) {
+          if (!ALLOWED_IMAGE_TYPES.includes(coverImage.type)) {
+            setError("Please upload a JPG, PNG, or WebP image.");
+            return;
+          }
 
-      if (!result.success) {
-        setError(result.error ?? "Unable to save project.");
-        return;
+          if (coverImage.size > MAX_IMAGE_SIZE) {
+            setError("Cover image must be smaller than 5 MB.");
+            return;
+          }
+
+          const extension = getFileExtension(coverImage);
+
+          if (!extension) {
+            setError("Unsupported image format.");
+            return;
+          }
+
+          const supabase = createClient();
+
+          const filePath = `${storagePathPrefix}/${crypto.randomUUID()}.${extension}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("rove-labs-project-covers")
+            .upload(filePath, coverImage, {
+              contentType: coverImage.type,
+              cacheControl: "3600",
+              upsert: false,
+            });
+
+          if (uploadError) {
+            console.error("Failed to upload cover image:", uploadError);
+
+            setError("Failed to upload cover image. Please try again.");
+            return;
+          }
+
+          const {
+            data: { publicUrl },
+          } = supabase.storage
+            .from("rove-labs-project-covers")
+            .getPublicUrl(filePath);
+
+          formData.set("cover_image_url", publicUrl);
+        }
+
+        const result = await action(formData);
+
+        if (!result.success) {
+          setError(result.error ?? "Unable to save project.");
+          return;
+        }
+
+        onSuccess?.();
+      } catch (error) {
+        console.error("Failed to save project:", error);
+
+        setError("Unable to save project. Please try again.");
       }
-
-      onSuccess?.();
     });
   }
 
@@ -119,20 +196,18 @@ export function ProjectForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="cover_image_url">Cover image URL</Label>
+            <Label htmlFor="cover_image">Cover image</Label>
 
             <Input
-              id="cover_image_url"
-              name="cover_image_url"
-              type="url"
-              placeholder="https://example.com/project-cover.jpg"
-              defaultValue={initialValues?.cover_image_url ?? ""}
+              id="cover_image"
+              name="cover_image"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
               disabled={isPending}
             />
 
             <p className="text-xs text-muted-foreground">
-              The project cover image. We&apos;ll add Supabase Storage upload
-              later.
+              Upload a JPG, PNG, or WebP image. Maximum size: 5 MB.
             </p>
           </div>
         </>
@@ -201,9 +276,11 @@ export function ProjectForm({
         </div>
       )}
 
-      <Button type="submit" disabled={isPending}>
-        {isPending ? pendingLabel : submitLabel}
-      </Button>
+      <FormActions
+        submitLabel={submitLabel}
+        pendingLabel={pendingLabel}
+        isPending={isPending}
+      />
     </form>
   );
 }

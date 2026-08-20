@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 
 import "./globals.css";
 import { brand } from "@/config/brand";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,10 +43,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="flex min-h-screen flex-col antialiased">
+      <body
+        className="flex min-h-screen flex-col antialiased"
+        suppressHydrationWarning
+      >
         <SiteHeader />
 
-        <main className="flex-1">{children}</main>
+        <main className="flex-1">
+          {children}
+          <Toaster />
+        </main>
 
         <SiteFooter />
       </body>
