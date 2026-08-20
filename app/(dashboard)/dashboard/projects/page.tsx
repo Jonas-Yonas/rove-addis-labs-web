@@ -3,6 +3,7 @@ import { FolderKanban, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ProjectCreateDialog } from "@/components/dashboard/project-create-dialog";
 import { getProjects } from "@/lib/projects/queries";
+import Link from "next/link";
 
 export default async function ProjectsPage() {
   const projects = await getProjects();
@@ -35,9 +36,10 @@ export default async function ProjectsPage() {
 
       <div className="grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {projects.map((project) => (
-          <div
+          <Link
             key={project.id}
-            className="min-w-0 rounded-xl border bg-card p-5"
+            href={`/dashboard/projects/${project.id}`}
+            className="block min-w-0 rounded-xl border bg-card p-5 transition-colors hover:bg-muted/50"
           >
             <div className="flex items-start justify-between">
               <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
@@ -54,7 +56,7 @@ export default async function ProjectsPage() {
             <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
               {project.description}
             </p>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
