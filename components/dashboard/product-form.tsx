@@ -25,13 +25,38 @@ type ProductStatus =
   | "PAUSED"
   | "ARCHIVED";
 
+interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  tagline: string | null;
+  description: string;
+  logo_url: string | null;
+  cover_image_url: string | null;
+  website_url: string | null;
+  status: ProductStatus;
+  featured: boolean;
+}
+
 interface ProductFormProps {
-  action: (formData: FormData) => Promise<{
-    success: boolean;
-    error?: string;
-  }>;
+  product?: Product;
+
+  action:
+    | ((formData: FormData) => Promise<{
+        success: boolean;
+        error?: string;
+      }>)
+    | ((
+        productId: string,
+        formData: FormData,
+      ) => Promise<{
+        success: boolean;
+        error?: string;
+      }>);
+
   submitLabel?: string;
   pendingLabel?: string;
+
   initialValues?: {
     name?: string;
     slug?: string;
@@ -43,17 +68,10 @@ interface ProductFormProps {
     status?: ProductStatus;
     featured?: boolean;
   };
+
   onSuccess?: () => void;
 }
 
-// const statuses: ProductStatus[] = [
-//   "IDEA",
-//   "DEVELOPMENT",
-//   "BETA",
-//   "LIVE",
-//   "PAUSED",
-//   "ARCHIVED",
-// ];
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -72,6 +90,7 @@ function getFileExtension(file: File) {
 }
 
 export function ProductForm({
+  product,
   action,
   submitLabel = "Save product",
   pendingLabel = "Saving...",
@@ -80,6 +99,8 @@ export function ProductForm({
 }: ProductFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  const values = product ?? initialValues;
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -99,8 +120,15 @@ export function ProductForm({
       try {
         const supabase = createClient();
 
+        /*
+         * Upload new logo only when the user selected one.
+         */
         if (logoImage instanceof File && logoImage.size > 0) {
-          const logoUrl = await uploadImage(supabase, logoImage, "logos");
+          const logoUrl = await uploadImage(
+            supabase,
+            logoImage,
+            product ? `products/${product.id}/logos` : "logos",
+          );
 
           if (!logoUrl) {
             setError("Failed to upload logo.");
@@ -110,8 +138,15 @@ export function ProductForm({
           formData.set("logo_url", logoUrl);
         }
 
+        /*
+         * Upload new cover only when the user selected one.
+         */
         if (coverImage instanceof File && coverImage.size > 0) {
-          const coverUrl = await uploadImage(supabase, coverImage, "products");
+          const coverUrl = await uploadImage(
+            supabase,
+            coverImage,
+            product ? `products/${product.id}/covers` : "products",
+          );
 
           if (!coverUrl) {
             setError("Failed to upload cover image.");
@@ -121,7 +156,26 @@ export function ProductForm({
           formData.set("cover_image_url", coverUrl);
         }
 
-        const result = await action(formData);
+        let result;
+
+        if (product) {
+          result = await (
+            action as (
+              productId: string,
+              formData: FormData,
+            ) => Promise<{
+              success: boolean;
+              error?: string;
+            }>
+          )(product.id, formData);
+        } else {
+          result = await (
+            action as (formData: FormData) => Promise<{
+              success: boolean;
+              error?: string;
+            }>
+          )(formData);
+        }
 
         if (!result.success) {
           setError(result.error ?? "Unable to save product.");
@@ -185,6 +239,7 @@ export function ProductForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Name */}
       <div className="space-y-2">
         <Label htmlFor="name">Product name</Label>
 
@@ -192,12 +247,13 @@ export function ProductForm({
           id="name"
           name="name"
           placeholder="e.g. Nexabot"
-          defaultValue={initialValues?.name ?? ""}
+          defaultValue={values?.name ?? ""}
           required
           disabled={isPending}
         />
       </div>
 
+      {/* Slug */}
       <div className="space-y-2">
         <Label htmlFor="slug">Slug</Label>
 
@@ -205,12 +261,13 @@ export function ProductForm({
           id="slug"
           name="slug"
           placeholder="e.g. nexabot"
-          defaultValue={initialValues?.slug ?? ""}
+          defaultValue={values?.slug ?? ""}
           required
           disabled={isPending}
         />
       </div>
 
+      {/* Tagline */}
       <div className="space-y-2">
         <Label htmlFor="tagline">Tagline</Label>
 
@@ -218,11 +275,12 @@ export function ProductForm({
           id="tagline"
           name="tagline"
           placeholder="A short description of the product"
-          defaultValue={initialValues?.tagline ?? ""}
+          defaultValue={values?.tagline ?? ""}
           disabled={isPending}
         />
       </div>
 
+      {/* Description */}
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
 
@@ -230,13 +288,14 @@ export function ProductForm({
           id="description"
           name="description"
           placeholder="Describe the product..."
-          defaultValue={initialValues?.description ?? ""}
+          defaultValue={values?.description ?? ""}
           rows={5}
           required
           disabled={isPending}
         />
       </div>
 
+      {/* Logo */}
       <div className="space-y-2">
         <Label htmlFor="logo_image">Logo</Label>
 
@@ -248,11 +307,18 @@ export function ProductForm({
           disabled={isPending}
         />
 
+        {values?.logo_url && (
+          <p className="text-xs text-muted-foreground">
+            A logo is already uploaded. Select a new file to replace it.
+          </p>
+        )}
+
         <p className="text-xs text-muted-foreground">
           JPG, PNG, or WebP. Maximum size: 5 MB.
         </p>
       </div>
 
+      {/* Cover */}
       <div className="space-y-2">
         <Label htmlFor="cover_image">Cover image</Label>
 
@@ -264,11 +330,18 @@ export function ProductForm({
           disabled={isPending}
         />
 
+        {values?.cover_image_url && (
+          <p className="text-xs text-muted-foreground">
+            A cover image is already uploaded. Select a new file to replace it.
+          </p>
+        )}
+
         <p className="text-xs text-muted-foreground">
           JPG, PNG, or WebP. Maximum size: 5 MB.
         </p>
       </div>
 
+      {/* Website */}
       <div className="space-y-2">
         <Label htmlFor="website_url">Website URL</Label>
 
@@ -277,15 +350,16 @@ export function ProductForm({
           name="website_url"
           type="url"
           placeholder="https://example.com"
-          defaultValue={initialValues?.website_url ?? ""}
+          defaultValue={values?.website_url ?? ""}
           disabled={isPending}
         />
       </div>
 
+      {/* Status */}
       <div className="space-y-2">
         <Label htmlFor="status">Status</Label>
 
-        <Select name="status" defaultValue="IDEA">
+        <Select name="status" defaultValue={values?.status ?? "IDEA"}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
@@ -301,12 +375,13 @@ export function ProductForm({
         </Select>
       </div>
 
+      {/* Featured */}
       <div className="flex items-center gap-3">
         <Checkbox
           id="featured"
           name="featured"
           value="true"
-          defaultChecked={initialValues?.featured ?? false}
+          defaultChecked={values?.featured ?? false}
           disabled={isPending}
         />
 
@@ -315,6 +390,7 @@ export function ProductForm({
         </Label>
       </div>
 
+      {/* Error */}
       {error && (
         <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
           {error}

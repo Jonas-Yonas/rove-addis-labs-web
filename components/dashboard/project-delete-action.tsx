@@ -1,12 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
-import { toast } from "sonner";
 
-import { deleteProject } from "@/lib/projects/actions";
-import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { Button } from "@/components/ui/button";
+import { DeleteConfirmDialog } from "@/components/shared/delete-confirm-dialog";
+import { deleteProduct } from "@/lib/products/actions";
 
 interface ProjectDeleteActionProps {
   projectId: string;
@@ -20,31 +17,22 @@ export function ProjectDeleteAction({
   const router = useRouter();
 
   async function handleDelete() {
-    const result = await deleteProject(projectId);
+    const result = await deleteProduct(projectId);
 
-    if (!result.success) {
-      toast.error(result.error);
-      return;
+    if (result.success) {
+      router.push("/dashboard/products");
+      router.refresh();
     }
 
-    toast.success("Project deleted successfully.");
-
-    router.push("/dashboard/projects");
-    router.refresh();
+    return result;
   }
 
   return (
-    <ConfirmDialog
-      trigger={
-        <Button variant="destructive">
-          <Trash2 className="size-4" />
-          Delete project
-        </Button>
-      }
+    <DeleteConfirmDialog
       title="Delete project?"
-      description={`This will permanently delete "${projectTitle}" and its cover image. This action cannot be undone.`}
-      confirmLabel="Delete project"
-      destructive
+      description={`This will permanently delete "${projectTitle}" and its associated images. This action cannot be undone.`}
+      actionLabel="Delete project"
+      successMessage="Project deleted successfully."
       onConfirm={handleDelete}
     />
   );

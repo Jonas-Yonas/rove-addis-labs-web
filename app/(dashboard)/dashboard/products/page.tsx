@@ -8,6 +8,7 @@ import { getProducts } from "@/lib/products/queries";
 
 import { ProductCreateDialog } from "@/components/dashboard/product-create-dialog";
 import { ProductFilters } from "@/components/dashboard/product-filters";
+import Link from "next/link";
 
 interface ProductsPageProps {
   searchParams: Promise<{
@@ -63,7 +64,12 @@ export default async function ProductsPage({
         <>
           <div className="grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {products.data.map((product) => (
-              <div key={product.id} className="rounded-xl border bg-card p-5">
+              <Link
+                key={product.id}
+                href={`/dashboard/products/${product.id}`}
+                className="block min-w-0 rounded-xl border bg-card p-5 transition-colors hover:bg-muted/50"
+              >
+                {/* <div key={product.id} className="rounded-xl border bg-card p-5"> */}
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
                     <h2 className="truncate font-semibold">{product.name}</h2>
@@ -87,7 +93,7 @@ export default async function ProductsPage({
                     Featured
                   </div>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
 

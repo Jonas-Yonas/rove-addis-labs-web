@@ -4,15 +4,13 @@ import { useState } from "react";
 import { ImageIcon } from "lucide-react";
 import Image from "next/image";
 
-interface ProjectCoverImageProps {
+interface CoverImageProps {
   src?: string | null;
   alt: string;
+  item?: string | null;
 }
 
-export function ProjectCoverImage({
-  src,
-  alt,
-}: ProjectCoverImageProps) {
+export function CoverImage({ src, alt, item = "item" }: CoverImageProps) {
   const [hasError, setHasError] = useState(false);
 
   const showPlaceholder = !src || hasError;
@@ -26,12 +24,10 @@ export function ProjectCoverImage({
           </div>
 
           <div className="text-center">
-            <p className="text-sm font-medium">
-              No cover image
-            </p>
+            <p className="text-sm font-medium">No cover image</p>
 
             <p className="mt-1 text-xs text-muted-foreground">
-              Add a cover image from Edit Project.
+              Add a cover image from Edit {item}.
             </p>
           </div>
         </div>

@@ -30,9 +30,7 @@ export async function getProducts({
   if (search?.trim()) {
     const value = search.trim();
 
-    query = query.or(
-      `name.ilike.%${value}%,tagline.ilike.%${value}%`,
-    );
+    query = query.or(`name.ilike.%${value}%,tagline.ilike.%${value}%`);
   }
 
   if (status && status !== "ALL") {
@@ -52,4 +50,23 @@ export async function getProducts({
     page,
     pageSize,
   };
+}
+
+export async function getProductById(id: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select(
+      "id, name, slug, tagline, description, logo_url, cover_image_url, website_url, status, featured, created_at, updated_at",
+    )
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Failed to fetch product:", error);
+    throw new Error("Failed to fetch product.");
+  }
+
+  return data;
 }
