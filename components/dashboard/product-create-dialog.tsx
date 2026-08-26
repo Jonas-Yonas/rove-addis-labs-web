@@ -14,6 +14,7 @@ import {
 
 import { ProductForm } from "./product-form";
 import { createProduct } from "@/lib/products/actions";
+import { Plus } from "lucide-react";
 
 export function ProductCreateDialog() {
   const router = useRouter();
@@ -22,6 +23,11 @@ export function ProductCreateDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={<Button>New product</Button>} />
+
+      <DialogTrigger render={<Button />}>
+        <Plus className="size-4" />
+        New project
+      </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
