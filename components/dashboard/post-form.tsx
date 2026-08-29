@@ -1,9 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { SelectField } from "@/components/ui/select";
 
 export const POST_STATUSES = ["DRAFT", "PUBLISHED", "ARCHIVED"] as const;
 
+const STATUS_OPTIONS = POST_STATUSES.map((status) => ({
+  value: status,
+  label: status.charAt(0) + status.slice(1).toLowerCase(),
+}));
+
 export interface PostCategoryOption {
+  id: string;
+  name: string;
+}
+
+export interface PostTagOption {
   id: string;
   name: string;
 }
@@ -18,6 +30,7 @@ export interface PostFormInitial {
   status?: string;
   featured?: boolean;
   published_at?: string | null;
+  tag_ids?: string[];
 }
 
 export function PostForm({
@@ -25,12 +38,17 @@ export function PostForm({
   submitLabel,
   initial,
   categories,
+  tags,
 }: {
   action: (formData: FormData) => void | Promise<void>;
   submitLabel: string;
   initial?: PostFormInitial;
   categories: PostCategoryOption[];
+  tags: PostTagOption[];
 }) {
+  const categoryList = categories ?? [];
+  const tagList = tags ?? [];
+
   return (
     <form action={action} className="space-y-6">
       <div className="grid gap-5 md:grid-cols-2">
@@ -60,21 +78,33 @@ export function PostForm({
         required
       />
 
-      <label className="block space-y-2 text-sm">
+      <div className="space-y-2 text-sm">
         <span className="font-medium">Category</span>
-        <select
+        <SelectField
+          size="lg"
           name="category_id"
           defaultValue={initial?.category_id ?? ""}
-          className="h-10 w-full rounded-md border bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <option value="">No category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </label>
+          options={[
+            { value: "", label: "No category" },
+            ...categoryList.map((category) => ({
+              value: category.id,
+              label: category.name,
+            })),
+          ]}
+        />
+      </div>
+
+      <div className="space-y-2 text-sm">
+        <span className="font-medium">Tags</span>
+        <MultiSelect
+          name="tag_ids"
+          defaultValue={initial?.tag_ids ?? []}
+          options={tagList.map((tag) => ({ value: tag.id, label: tag.name }))}
+          placeholder="Add tags"
+          searchPlaceholder="Search tags..."
+          emptyText="No tags yet. Create some under Content → Tags."
+        />
+      </div>
 
       <Field
         label="Cover image URL"
@@ -85,20 +115,15 @@ export function PostForm({
       />
 
       <div className="grid gap-5 md:grid-cols-3">
-        <label className="space-y-2 text-sm">
+        <div className="space-y-2 text-sm">
           <span className="font-medium">Status</span>
-          <select
+          <SelectField
+            size="lg"
             name="status"
             defaultValue={initial?.status ?? "DRAFT"}
-            className="h-10 w-full rounded-md border bg-background px-3 outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {POST_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {status.charAt(0) + status.slice(1).toLowerCase()}
-              </option>
-            ))}
-          </select>
-        </label>
+            options={STATUS_OPTIONS}
+          />
+        </div>
 
         <label className="space-y-2 text-sm">
           <span className="font-medium">Published at</span>

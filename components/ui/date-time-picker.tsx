@@ -49,6 +49,13 @@ function toLocalInputValue(date?: Date) {
   )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
+// Value submitted with the form. A full ISO string (with UTC offset) so the
+// server stores the exact instant the user picked, regardless of the server's
+// timezone. `toLocalInputValue` is kept for native <input type="datetime-local">.
+function toFormValue(date?: Date) {
+  return date ? date.toISOString() : "";
+}
+
 function formatDate(date?: Date) {
   if (!date) return "";
 
@@ -73,7 +80,18 @@ function getPeriod(hours: number): "AM" | "PM" {
   return hours >= 12 ? "PM" : "AM";
 }
 
-function TimeColumn({
+const TIME_COLUMN_HEIGHT = "h-45"; // 180px — keeps every column the same height
+const columnLabelClass =
+  "mb-1.5 text-center text-[10px] font-semibold uppercase tracking-wider text-muted-foreground";
+const columnFrameClass =
+  "rounded-lg border bg-background p-1 " + TIME_COLUMN_HEIGHT;
+const optionClass =
+  "flex w-full items-center justify-center rounded-md text-sm tabular-nums transition-colors";
+const optionActiveClass = "bg-primary font-semibold text-primary-foreground";
+const optionIdleClass =
+  "text-foreground hover:bg-accent hover:text-accent-foreground";
+
+function TimeScrollColumn({
   label,
   value,
   options,
@@ -84,14 +102,69 @@ function TimeColumn({
   options: string[];
   onChange: (value: string) => void;
 }) {
-  return (
-    <div className="min-w-0 flex-1">
-      <p className="mb-2 text-center text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-        {label}
-      </p>
+  const listRef = React.useRef<HTMLDivElement>(null);
+  const activeRef = React.useRef<HTMLButtonElement>(null);
 
-      <div className="max-h-52 overflow-y-auto rounded-md border bg-background p-1">
+  // Center the selected option whenever the popover opens (mount) or the value
+  // changes, so an edited value is visible without scrolling by hand.
+  React.useEffect(() => {
+    const list = listRef.current;
+    const active = activeRef.current;
+    if (!list || !active) return;
+
+    list.scrollTop =
+      active.offsetTop - list.clientHeight / 2 + active.clientHeight / 2;
+  }, [value]);
+
+  return (
+    <div className="flex min-w-0 flex-col">
+      <p className={columnLabelClass}>{label}</p>
+
+      <div
+        ref={listRef}
+        className={cn(
+          columnFrameClass,
+          "overflow-y-auto [scrollbar-width:thin]",
+          "[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent",
+        )}
+      >
         {options.map((option) => {
+          const active = option === value;
+
+          return (
+            <button
+              key={option}
+              ref={active ? activeRef : undefined}
+              type="button"
+              onClick={() => onChange(option)}
+              className={cn(
+                optionClass,
+                "h-8",
+                active ? optionActiveClass : optionIdleClass,
+              )}
+            >
+              {option}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PeriodColumn({
+  value,
+  onChange,
+}: {
+  value: "AM" | "PM";
+  onChange: (value: "AM" | "PM") => void;
+}) {
+  return (
+    <div className="flex min-w-0 flex-col">
+      <p className={columnLabelClass}>AM/PM</p>
+
+      <div className={cn(columnFrameClass, "grid grid-rows-2 gap-1")}>
+        {(["AM", "PM"] as const).map((option) => {
           const active = option === value;
 
           return (
@@ -100,10 +173,9 @@ function TimeColumn({
               type="button"
               onClick={() => onChange(option)}
               className={cn(
-                "flex h-9 w-full items-center justify-center rounded-sm text-sm transition-colors",
-                "hover:bg-accent hover:text-accent-foreground",
-                active &&
-                  "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                optionClass,
+                "h-full",
+                active ? optionActiveClass : optionIdleClass,
               )}
             >
               {option}
@@ -235,53 +307,49 @@ function DateTimePicker({
               <Calendar
                 mode="single"
                 selected={selected}
+                defaultMonth={selected}
                 onSelect={updateDate}
                 disabled={[
                   ...(minDate ? [{ before: minDate }] : []),
                   ...(maxDate ? [{ after: maxDate }] : []),
                 ]}
-                initialFocus
+                autoFocus
               />
             </div>
 
-            <div className="w-full p-4 sm:w-[280px]">
+            <div className="flex w-full flex-col p-4 sm:w-64">
               <div className="mb-3 flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-sm font-semibold">
-                    <Clock3 className="size-4 text-muted-foreground" />
-                    Time
-                  </div>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    Choose a time
-                  </p>
+                <div className="flex items-center gap-2 text-sm font-semibold">
+                  <Clock3 className="size-4 text-muted-foreground" />
+                  Time
                 </div>
 
-                {selected && (
-                  <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium">
-                    {hour}:{minute} {period}
-                  </span>
-                )}
+                <span
+                  className={cn(
+                    "rounded-md px-2 py-1 text-xs font-medium tabular-nums",
+                    selected
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground",
+                  )}
+                >
+                  {hour}:{minute} {period}
+                </span>
               </div>
 
               <div className="grid grid-cols-3 gap-2">
-                <TimeColumn
+                <TimeScrollColumn
                   label="Hour"
                   value={hour}
                   options={hourOptions}
                   onChange={updateHour}
                 />
-                <TimeColumn
-                  label="Minute"
+                <TimeScrollColumn
+                  label="Min"
                   value={minute}
                   options={minuteOptions}
                   onChange={updateMinute}
                 />
-                <TimeColumn
-                  label="Period"
-                  value={period}
-                  options={["AM", "PM"]}
-                  onChange={updatePeriod}
-                />
+                <PeriodColumn value={period} onChange={updatePeriod} />
               </div>
 
               <div className="mt-4 flex items-center justify-between border-t pt-3">
@@ -312,11 +380,7 @@ function DateTimePicker({
       </Popover>
 
       {name && (
-        <input
-          type="hidden"
-          name={name}
-          value={toLocalInputValue(selected)}
-        />
+        <input type="hidden" name={name} value={toFormValue(selected)} />
       )}
     </div>
   );

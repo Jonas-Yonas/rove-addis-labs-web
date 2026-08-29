@@ -1,5 +1,7 @@
-import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
+
+import { Button } from "@/components/ui/button";
+import { SelectField } from "@/components/ui/select";
 
 export const EXPERIMENT_STATUSES = [
   "EXPLORING",
@@ -8,6 +10,11 @@ export const EXPERIMENT_STATUSES = [
   "INCUBATING",
   "ARCHIVED",
 ] as const;
+
+const STATUS_OPTIONS = EXPERIMENT_STATUSES.map((status) => ({
+  value: status,
+  label: status.charAt(0) + status.slice(1).toLowerCase(),
+}));
 
 interface ExperimentFormProps {
   action: (formData: FormData) => void | Promise<void>;
@@ -62,20 +69,15 @@ export function ExperimentForm({
       />
 
       <div className="grid gap-5 md:grid-cols-2">
-        <label className="space-y-2 text-sm">
+        <div className="space-y-2 text-sm">
           <span className="font-medium">Status</span>
-          <select
+          <SelectField
+            size="lg"
             name="status"
             defaultValue={initial?.status ?? "EXPLORING"}
-            className="h-10 w-full rounded-md border bg-background px-3 outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {EXPERIMENT_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {status.charAt(0) + status.slice(1).toLowerCase()}
-              </option>
-            ))}
-          </select>
-        </label>
+            options={STATUS_OPTIONS}
+          />
+        </div>
 
         <label className="flex items-center gap-3 self-end pb-2 text-sm">
           <input

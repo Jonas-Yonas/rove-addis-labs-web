@@ -90,6 +90,7 @@ export default async function LabsPage({ searchParams }: LabsPageProps) {
             page={experiments.page}
             pageSize={experiments.pageSize}
             totalItems={experiments.count}
+            noun="labs"
           />
         </>
       )}

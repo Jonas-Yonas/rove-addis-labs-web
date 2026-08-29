@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { SelectField } from "@/components/ui/select";
+
 const statuses = [
   "ALL",
   "EXPLORING",
@@ -11,6 +13,14 @@ const statuses = [
   "INCUBATING",
   "ARCHIVED",
 ] as const;
+
+const STATUS_OPTIONS = statuses.map((item) => ({
+  value: item,
+  label:
+    item === "ALL"
+      ? "All statuses"
+      : item.charAt(0) + item.slice(1).toLowerCase(),
+}));
 
 export function ExperimentFilters({
   search,
@@ -23,10 +33,6 @@ export function ExperimentFilters({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(search);
-
-  useEffect(() => {
-    setValue(search);
-  }, [search]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -63,19 +69,14 @@ export function ExperimentFilters({
         className="h-10 min-w-0 flex-1 rounded-md border bg-background px-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
       />
 
-      <select
+      <SelectField
+        size="lg"
         value={status}
-        onChange={(event) => changeStatus(event.target.value)}
-        className="h-10 rounded-md border bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-48"
-      >
-        {statuses.map((item) => (
-          <option key={item} value={item}>
-            {item === "ALL"
-              ? "All statuses"
-              : item.charAt(0) + item.slice(1).toLowerCase()}
-          </option>
-        ))}
-      </select>
+        onValueChange={changeStatus}
+        options={STATUS_OPTIONS}
+        aria-label="Filter labs by status"
+        className="sm:w-48"
+      />
     </div>
   );
 }

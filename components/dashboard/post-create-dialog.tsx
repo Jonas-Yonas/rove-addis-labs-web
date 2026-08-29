@@ -13,18 +13,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PostCategoryOption, PostForm } from "./post-form";
+import { PostCategoryOption, PostForm, PostTagOption } from "./post-form";
 
 interface PostCreateDialogProps {
   categories: PostCategoryOption[];
+  tags: PostTagOption[];
 }
 
-export function PostCreateDialog({ categories }: PostCreateDialogProps) {
+export function PostCreateDialog({ categories, tags }: PostCreateDialogProps) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  // New posts default the publish date to "now"; refreshed each time the dialog
+  // opens. The user can still change or clear it before saving.
+  const [initialPublishedAt, setInitialPublishedAt] = useState(() =>
+    new Date().toISOString(),
+  );
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -53,18 +60,18 @@ export function PostCreateDialog({ categories }: PostCreateDialogProps) {
   function handleOpenChange(nextOpen: boolean) {
     setOpen(nextOpen);
 
-    if (!nextOpen) {
+    if (nextOpen) {
+      setInitialPublishedAt(new Date().toISOString());
+    } else {
       setError(null);
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger>
-        <Button type="button">
-          <Plus className="mr-2 size-4" />
-          New Post
-        </Button>
+      <DialogTrigger render={<Button type="button" />}>
+        <Plus className="mr-2 size-4" />
+        New Post
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
@@ -84,7 +91,9 @@ export function PostCreateDialog({ categories }: PostCreateDialogProps) {
         <PostForm
           action={handleSubmit}
           submitLabel={isPending ? "Creating..." : "Create Post"}
+          initial={{ published_at: initialPublishedAt }}
           categories={categories}
+          tags={tags}
         />
       </DialogContent>
     </Dialog>

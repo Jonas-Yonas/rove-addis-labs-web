@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SelectField } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
 
@@ -39,6 +40,11 @@ const statuses: ProjectStatus[] = [
   "COMPLETED",
   "ARCHIVED",
 ];
+
+const STATUS_OPTIONS = statuses.map((status) => ({
+  value: status,
+  label: status.replace("_", " "),
+}));
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
@@ -241,19 +247,14 @@ export function ProjectForm({
       <div className="space-y-2">
         <Label htmlFor="status">Status</Label>
 
-        <select
+        <SelectField
           id="status"
           name="status"
+          aria-label="Status"
           defaultValue={initialValues?.status ?? "PLANNED"}
           disabled={isPending}
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {statuses.map((status) => (
-            <option key={status} value={status}>
-              {status.replace("_", " ")}
-            </option>
-          ))}
-        </select>
+          options={STATUS_OPTIONS}
+        />
       </div>
 
       <div className="flex items-center gap-3">

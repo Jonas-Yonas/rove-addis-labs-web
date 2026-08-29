@@ -6,6 +6,7 @@ import { PostDeleteButton } from "@/components/dashboard/post-delete-button";
 import { PostEditDialog } from "@/components/dashboard/post-edit-dialog";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { getPostById, getPostCategories } from "@/lib/posts/queries";
+import { getAllTags } from "@/lib/tags/queries";
 
 export default async function PostDetailPage({
   params,
@@ -14,9 +15,10 @@ export default async function PostDetailPage({
 }) {
   const { id } = await params;
 
-  const [post, categories] = await Promise.all([
+  const [post, categories, tags] = await Promise.all([
     getPostById(id),
     getPostCategories(),
+    getAllTags(),
   ]);
 
   if (!post) {
@@ -92,10 +94,27 @@ export default async function PostDetailPage({
                   {post.excerpt}
                 </p>
               )}
+
+              {post.tags.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag.id}
+                      className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                    >
+                      {tag.name}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex shrink-0 gap-2">
-              <PostEditDialog post={post} categories={categories} />
+              <PostEditDialog
+                post={post}
+                categories={categories}
+                tags={tags}
+              />
 
               <PostDeleteButton id={post.id} />
             </div>
@@ -123,7 +142,7 @@ export default async function PostDetailPage({
             <div>
               <p className="text-muted-foreground">Published</p>
               <p className="mt-1 font-medium">
-                {post.published_at
+                {post.status === "PUBLISHED" && post.published_at
                   ? new Intl.DateTimeFormat("en", {
                       dateStyle: "medium",
                     }).format(new Date(post.published_at))

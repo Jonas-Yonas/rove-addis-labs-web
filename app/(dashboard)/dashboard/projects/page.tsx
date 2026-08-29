@@ -82,6 +82,7 @@ export default async function ProjectsPage({
         page={projects.page}
         pageSize={projects.pageSize}
         totalItems={projects.count}
+        noun="projects"
       />
     </div>
   );

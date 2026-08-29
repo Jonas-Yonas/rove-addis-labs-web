@@ -101,6 +101,7 @@ export default async function ProductsPage({
             page={products.page}
             pageSize={products.pageSize}
             totalItems={products.count}
+            noun="products"
           />
         </>
       )}

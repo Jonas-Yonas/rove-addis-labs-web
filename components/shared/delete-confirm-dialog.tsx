@@ -22,6 +22,8 @@ interface DeleteConfirmDialogProps {
   title: string;
   description: string;
   actionLabel: string;
+  triggerLabel?: string;
+  triggerSize?: "default" | "sm";
   successMessage?: string;
   redirectTo?: string;
   onConfirm: () => Promise<{
@@ -34,6 +36,8 @@ export function DeleteConfirmDialog({
   title,
   description,
   actionLabel,
+  triggerLabel,
+  triggerSize = "default",
   successMessage = "Deleted successfully.",
   redirectTo,
   onConfirm,
@@ -73,9 +77,9 @@ export function DeleteConfirmDialog({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
-          <Button variant="destructive">
+          <Button variant="destructive" size={triggerSize}>
             <Trash2 className="size-4" />
-            {actionLabel}
+            {triggerLabel ?? actionLabel}
           </Button>
         }
       />

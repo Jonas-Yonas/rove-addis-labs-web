@@ -29,11 +29,9 @@ export function ExperimentCreateDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 size-4" />
-          New Lab
-        </Button>
+      <DialogTrigger render={<Button />}>
+        <Plus className="mr-2 size-4" />
+        New Lab
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">

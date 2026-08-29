@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Pagination } from "@/components/shared/pagination";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { getPostCategories, getPosts } from "@/lib/posts/queries";
+import { getAllTags } from "@/lib/tags/queries";
 
 export default async function PostsPage({
   searchParams,
@@ -19,10 +20,10 @@ export default async function PostsPage({
   const parsedPage = Number(params.page);
   const page = Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
-  // const posts = await getPosts({ search, status, page, pageSize: 9 });
-  const [posts, categories] = await Promise.all([
+  const [posts, categories, tags] = await Promise.all([
     getPosts({ search, status, page, pageSize: 9 }),
     getPostCategories(),
+    getAllTags(),
   ]);
 
   return (
@@ -31,7 +32,7 @@ export default async function PostsPage({
         eyebrow="Content"
         title="Posts"
         description="Create and manage articles and updates for Rove Addis Labs."
-        action={<PostCreateDialog categories={categories} />}
+        action={<PostCreateDialog categories={categories} tags={tags} />}
       />
       <PostFilters search={search} status={status} />
       {posts.data.length === 0 ? (
@@ -67,9 +68,26 @@ export default async function PostsPage({
                     {post.excerpt}
                   </p>
                 )}
+                {post.tags.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {post.tags.slice(0, 4).map((tag) => (
+                      <span
+                        key={tag.id}
+                        className="rounded-md bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground"
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                    {post.tags.length > 4 && (
+                      <span className="px-1 py-0.5 text-xs text-muted-foreground">
+                        +{post.tags.length - 4}
+                      </span>
+                    )}
+                  </div>
+                )}
                 <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
                   <span>
-                    {post.published_at
+                    {post.status === "PUBLISHED" && post.published_at
                       ? new Intl.DateTimeFormat("en", {
                           dateStyle: "medium",
                         }).format(new Date(post.published_at))
@@ -88,6 +106,7 @@ export default async function PostsPage({
             page={posts.page}
             pageSize={posts.pageSize}
             totalItems={posts.count}
+            noun="posts"
           />
         </>
       )}

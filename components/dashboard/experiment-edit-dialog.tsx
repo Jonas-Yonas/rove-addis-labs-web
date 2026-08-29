@@ -42,11 +42,9 @@ export function ExperimentEditDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          <Pencil className="mr-2 size-4" />
-          Edit
-        </Button>
+      <DialogTrigger render={<Button variant="outline" />}>
+        <Pencil className="mr-2 size-4" />
+        Edit
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">

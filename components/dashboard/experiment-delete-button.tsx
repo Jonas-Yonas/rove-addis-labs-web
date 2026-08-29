@@ -40,11 +40,9 @@ export function ExperimentDeleteButton({ id }: { id: string }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="destructive">
-          <Trash2 className="mr-2 size-4" />
-          Delete
-        </Button>
+      <DialogTrigger render={<Button variant="destructive" />}>
+        <Trash2 className="mr-2 size-4" />
+        Delete
       </DialogTrigger>
 
       <DialogContent>

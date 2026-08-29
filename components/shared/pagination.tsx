@@ -9,9 +9,15 @@ interface PaginationProps {
   page: number;
   pageSize: number;
   totalItems: number;
+  noun?: string;
 }
 
-export function Pagination({ page, pageSize, totalItems }: PaginationProps) {
+export function Pagination({
+  page,
+  pageSize,
+  totalItems,
+  noun = "results",
+}: PaginationProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,7 +48,7 @@ export function Pagination({ page, pageSize, totalItems }: PaginationProps) {
   return (
     <div className="flex items-center justify-between gap-4 border-t pt-4">
       <p className="text-sm text-muted-foreground">
-        Showing {startItem}–{endItem} of {totalItems} projects
+        Showing {startItem}–{endItem} of {totalItems} {noun}
       </p>
 
       <div className="flex items-center gap-1">

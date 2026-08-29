@@ -34,14 +34,14 @@ function SelectTrigger({
   children,
   ...props
 }: SelectPrimitive.Trigger.Props & {
-  size?: "sm" | "default"
+  size?: "sm" | "default" | "lg"
 }) {
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "flex w-fit items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "flex w-fit items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-8 data-[size=lg]:h-10 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -187,9 +187,88 @@ function SelectScrollDownButton({
   )
 }
 
+export interface SelectFieldOption {
+  value: string
+  label: string
+  disabled?: boolean
+}
+
+/**
+ * Batteries-included dropdown: pass an `options` array and it renders the whole
+ * trigger + popup. Works uncontrolled in a `<form>` (via `name`) or controlled
+ * (via `value` + `onValueChange`). For anything custom, compose the primitives
+ * above directly.
+ */
+function SelectField({
+  options,
+  placeholder = "Select an option",
+  className,
+  contentClassName,
+  size,
+  id,
+  name,
+  value,
+  defaultValue,
+  onValueChange,
+  required,
+  disabled,
+  "aria-label": ariaLabel,
+}: {
+  options: SelectFieldOption[]
+  placeholder?: string
+  className?: string
+  contentClassName?: string
+  size?: "sm" | "default" | "lg"
+  id?: string
+  name?: string
+  value?: string
+  defaultValue?: string
+  onValueChange?: (value: string) => void
+  required?: boolean
+  disabled?: boolean
+  "aria-label"?: string
+}) {
+  return (
+    <Select
+      items={options}
+      value={value}
+      defaultValue={defaultValue}
+      onValueChange={(next) => onValueChange?.(next as string)}
+      name={name}
+      id={id}
+      required={required}
+      disabled={disabled}
+    >
+      <SelectTrigger
+        size={size}
+        aria-label={ariaLabel}
+        className={cn("w-full", className)}
+      >
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+
+      <SelectContent
+        alignItemWithTrigger={false}
+        className={contentClassName}
+      >
+        {options.map((option) => (
+          <SelectItem
+            key={option.value}
+            value={option.value}
+            disabled={option.disabled}
+          >
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+}
+
 export {
   Select,
   SelectContent,
+  SelectField,
   SelectGroup,
   SelectItem,
   SelectLabel,

@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
 
 import { updatePost } from "@/lib/posts/actions";
-import type { PostCategoryOption, PostFormInitial } from "./post-form";
+import type {
+  PostCategoryOption,
+  PostFormInitial,
+  PostTagOption,
+} from "./post-form";
 import { PostForm } from "./post-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,9 +27,10 @@ interface EditablePost extends PostFormInitial {
 interface PostEditDialogProps {
   post: EditablePost;
   categories: PostCategoryOption[];
+  tags: PostTagOption[];
 }
 
-export function PostEditDialog({ post, categories }: PostEditDialogProps) {
+export function PostEditDialog({ post, categories, tags }: PostEditDialogProps) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -62,11 +67,9 @@ export function PostEditDialog({ post, categories }: PostEditDialogProps) {
         }
       }}
     >
-      <DialogTrigger>
-        <Button type="button" variant="outline">
-          <Pencil className="mr-2 size-4" />
-          Edit
-        </Button>
+      <DialogTrigger render={<Button type="button" variant="outline" />}>
+        <Pencil className="mr-2 size-4" />
+        Edit
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
@@ -88,6 +91,7 @@ export function PostEditDialog({ post, categories }: PostEditDialogProps) {
           submitLabel={isPending ? "Saving..." : "Save changes"}
           initial={post}
           categories={categories}
+          tags={tags}
         />
       </DialogContent>
     </Dialog>

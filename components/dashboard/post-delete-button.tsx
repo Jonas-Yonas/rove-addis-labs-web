@@ -27,7 +27,10 @@ export function PostDeleteButton({ id }: { id: string }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button variant="destructive"><Trash2 className="mr-2 size-4" />Delete</Button></DialogTrigger>
+      <DialogTrigger render={<Button variant="destructive" />}>
+        <Trash2 className="mr-2 size-4" />
+        Delete
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>Delete this post?</DialogTitle></DialogHeader>
         <p className="text-sm text-muted-foreground">This action cannot be undone. The post will be permanently removed.</p>
