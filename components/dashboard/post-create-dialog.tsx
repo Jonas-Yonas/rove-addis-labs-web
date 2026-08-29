@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 
 import { createPost } from "@/lib/posts/actions";
-import { PostForm } from "./post-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,8 +13,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { PostCategoryOption, PostForm } from "./post-form";
 
-export function PostCreateDialog() {
+interface PostCreateDialogProps {
+  categories: PostCategoryOption[];
+}
+
+export function PostCreateDialog({ categories }: PostCreateDialogProps) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -80,6 +84,7 @@ export function PostCreateDialog() {
         <PostForm
           action={handleSubmit}
           submitLabel={isPending ? "Creating..." : "Create Post"}
+          categories={categories}
         />
       </DialogContent>
     </Dialog>

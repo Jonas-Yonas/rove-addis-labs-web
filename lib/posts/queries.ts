@@ -7,6 +7,11 @@ export interface GetPostsOptions {
   pageSize?: number;
 }
 
+export interface PostCategory {
+  id: string;
+  name: string;
+}
+
 const POST_SELECT =
   "id, author_id, category_id, title, slug, excerpt, content, cover_image_url, status, featured, published_at, created_at, updated_at";
 
@@ -17,6 +22,7 @@ export async function getPosts({
   pageSize = 9,
 }: GetPostsOptions = {}) {
   const supabase = await createClient();
+
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
@@ -28,10 +34,13 @@ export async function getPosts({
 
   if (search?.trim()) {
     const value = search.trim();
+
     query = query.or(`title.ilike.%${value}%,excerpt.ilike.%${value}%`);
   }
 
-  if (status && status !== "ALL") query = query.eq("status", status);
+  if (status && status !== "ALL") {
+    query = query.eq("status", status);
+  }
 
   const { data, error, count } = await query;
 
@@ -40,7 +49,12 @@ export async function getPosts({
     throw new Error("Failed to fetch posts.");
   }
 
-  return { data: data ?? [], count: count ?? 0, page, pageSize };
+  return {
+    data: data ?? [],
+    count: count ?? 0,
+    page,
+    pageSize,
+  };
 }
 
 export async function getPostById(id: string) {
@@ -58,4 +72,20 @@ export async function getPostById(id: string) {
   }
 
   return data;
+}
+
+export async function getPostCategories(): Promise<PostCategory[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("categories")
+    .select("id, name")
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Failed to fetch categories:", error);
+    throw new Error("Failed to fetch categories.");
+  }
+
+  return data ?? [];
 }
