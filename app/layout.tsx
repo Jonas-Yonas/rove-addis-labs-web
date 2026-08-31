@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 
 import "./globals.css";
 import { brand } from "@/config/brand";
+import { siteUrl } from "@/lib/site";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -27,8 +28,9 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: brand.name,
+    default: `${brand.name} — ${brand.tagline}`,
     template: `%s | ${brand.name}`,
   },
   description: brand.description,
@@ -42,6 +44,19 @@ export const metadata: Metadata = {
     "Ethiopia",
     "Africa",
   ],
+  openGraph: {
+    type: "website",
+    siteName: brand.name,
+    title: `${brand.name} — ${brand.tagline}`,
+    description: brand.description,
+    url: siteUrl,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${brand.name} — ${brand.tagline}`,
+    description: brand.description,
+  },
 };
 
 export default function RootLayout({

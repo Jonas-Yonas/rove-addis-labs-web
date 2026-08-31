@@ -16,9 +16,13 @@ export async function generateMetadata({
 
   if (!project) return { title: "Project not found" };
 
+  const description = project.description.slice(0, 150);
+
   return {
     title: project.title,
-    description: project.description.slice(0, 150),
+    description,
+    openGraph: { title: project.title, description },
+    twitter: { title: project.title, description },
   };
 }
 

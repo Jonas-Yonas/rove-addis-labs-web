@@ -15,9 +15,13 @@ export async function generateMetadata({
 
   if (!post) return { title: "Article not found" };
 
+  const description = post.excerpt ?? undefined;
+
   return {
     title: post.title,
-    description: post.excerpt ?? undefined,
+    description,
+    openGraph: { title: post.title, description, type: "article" },
+    twitter: { title: post.title, description },
   };
 }
 

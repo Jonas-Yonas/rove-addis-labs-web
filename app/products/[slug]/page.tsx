@@ -17,9 +17,13 @@ export async function generateMetadata({
 
   if (!product) return { title: "Product not found" };
 
+  const description = product.tagline ?? product.description.slice(0, 150);
+
   return {
     title: product.name,
-    description: product.tagline ?? product.description.slice(0, 150),
+    description,
+    openGraph: { title: product.name, description },
+    twitter: { title: product.name, description },
   };
 }
 
