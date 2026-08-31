@@ -16,6 +16,7 @@ export async function createProduct(formData: FormData) {
   const websiteUrl = String(formData.get("website_url") ?? "").trim();
   const status = String(formData.get("status") ?? "IDEA");
   const featured = formData.get("featured") === "true";
+  const published = formData.get("published") === "true";
 
   if (!name || !slug || !description) {
     return {
@@ -34,6 +35,7 @@ export async function createProduct(formData: FormData) {
     website_url: websiteUrl || null,
     status,
     featured,
+    published,
   });
 
   if (error) {
@@ -61,7 +63,8 @@ export async function updateProduct(productId: string, formData: FormData) {
   const description = String(formData.get("description") ?? "").trim();
   const websiteUrl = String(formData.get("websiteUrl") ?? "").trim();
   const status = String(formData.get("status") ?? "IDEA");
-  const featured = formData.get("featured") === "on";
+  const featured = formData.get("featured") === "true";
+  const published = formData.get("published") === "true";
 
   if (!name || !slug || !description) {
     throw new Error("Name, slug, and description are required.");
@@ -77,6 +80,7 @@ export async function updateProduct(productId: string, formData: FormData) {
       website_url: websiteUrl || null,
       status,
       featured,
+      published,
       updated_at: new Date().toISOString(),
     })
     .eq("id", productId);

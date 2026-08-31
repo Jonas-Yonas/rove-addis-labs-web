@@ -29,7 +29,7 @@ export function ProductDeleteAction({
 
   return (
     <DeleteConfirmDialog
-      title="Delete product?"
+      title="Delete Product?"
       description={`This will permanently delete "${productName}" and its associated images. This action cannot be undone.`}
       actionLabel="Delete product"
       successMessage="Product deleted successfully."

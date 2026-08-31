@@ -13,8 +13,8 @@ const STATUSES = [
   "ARCHIVED",
 ] as const;
 
-function readFeatured(formData: FormData) {
-  const value = formData.get("featured");
+function readCheckbox(formData: FormData, name: string) {
+  const value = formData.get(name);
   return value === "true" || value === "on";
 }
 
@@ -26,7 +26,8 @@ function readExperiment(formData: FormData) {
     content: String(formData.get("content") ?? "").trim(),
     coverImageUrl: String(formData.get("cover_image_url") ?? "").trim(),
     status: String(formData.get("status") ?? "EXPLORING"),
-    featured: readFeatured(formData),
+    featured: readCheckbox(formData, "featured"),
+    published: readCheckbox(formData, "published"),
   };
 }
 
@@ -59,6 +60,7 @@ export async function createExperiment(formData: FormData) {
     cover_image_url: data.coverImageUrl || null,
     status: data.status,
     featured: data.featured,
+    published: data.published,
   });
 
   if (error) {
@@ -92,6 +94,7 @@ export async function updateExperiment(
       cover_image_url: data.coverImageUrl || null,
       status: data.status,
       featured: data.featured,
+      published: data.published,
       updated_at: new Date().toISOString(),
     })
     .eq("id", experimentId);

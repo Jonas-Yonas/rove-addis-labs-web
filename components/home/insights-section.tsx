@@ -1,28 +1,28 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
-const insights = [
-  {
-    category: "Engineering",
-    title: "Building software for real-world problems",
-  },
-  {
-    category: "AI",
-    title: "Where intelligent systems can create practical value",
-  },
-  {
-    category: "Product",
-    title: "From local ideas to products built for scale",
-  },
-];
+import { getPublishedPosts } from "@/lib/public/queries";
 
-export function InsightsSection() {
+function formatDate(value: string | null) {
+  if (!value) return null;
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+export async function InsightsSection() {
+  const posts = (await getPublishedPosts()).slice(0, 3);
+
+  if (posts.length === 0) return null;
+
   return (
     <section className="border-t border-border">
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className="flex items-end justify-between gap-6">
           <div>
-            <p className="text-sm font-medium tracking-[0.18em] text-accent uppercase">
+            <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">
               Insights
             </p>
 
@@ -33,7 +33,7 @@ export function InsightsSection() {
 
           <Link
             href="/blog"
-            className="hidden items-center gap-2 text-sm font-medium sm:inline-flex"
+            className="hidden items-center gap-2 text-sm font-medium transition-colors hover:text-accent sm:inline-flex"
           >
             View all
             <ArrowRight className="size-4" />
@@ -41,23 +41,31 @@ export function InsightsSection() {
         </div>
 
         <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {insights.map((insight) => (
+          {posts.map((post) => (
             <Link
-              key={insight.title}
-              href="/blog"
-              className="group rounded-xl border border-border p-6 transition-all hover:-translate-y-1 hover:border-accent/40"
+              key={post.id}
+              href={`/blog/${post.slug}`}
+              className="group flex flex-col rounded-2xl border border-border p-6 transition-all duration-200 hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5"
             >
-              <p className="text-xs font-medium tracking-[0.15em] text-accent uppercase">
-                {insight.category}
-              </p>
+              {formatDate(post.published_at) && (
+                <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                  {formatDate(post.published_at)}
+                </p>
+              )}
 
-              <h3 className="mt-6 text-xl font-semibold leading-7 transition-colors group-hover:text-accent">
-                {insight.title}
+              <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight transition-colors group-hover:text-accent">
+                {post.title}
               </h3>
 
-              <span className="mt-10 inline-flex items-center gap-2 text-sm text-muted-foreground">
+              {post.excerpt && (
+                <p className="mt-3 line-clamp-3 flex-1 text-sm leading-6 text-muted-foreground">
+                  {post.excerpt}
+                </p>
+              )}
+
+              <span className="mt-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                 Read more
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
             </Link>
           ))}

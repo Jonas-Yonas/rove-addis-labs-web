@@ -27,6 +27,7 @@ interface ExperimentFormProps {
     cover_image_url?: string | null;
     status?: string;
     featured?: boolean;
+    published?: boolean;
   };
   footer?: ReactNode;
 }
@@ -89,6 +90,17 @@ export function ExperimentForm({
           <span className="font-medium">Featured</span>
         </label>
       </div>
+
+      <label className="flex items-center gap-3 text-sm">
+        <input
+          type="checkbox"
+          name="published"
+          value="true"
+          defaultChecked={initial?.published ?? true}
+          className="size-4 rounded border"
+        />
+        <span className="font-medium">Show on the public site</span>
+      </label>
 
       <div className="flex items-center justify-end gap-2 border-t pt-5">
         {footer}

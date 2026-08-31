@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-background">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-background font-roboto">
       <div className="flex flex-1">
         <aside className="hidden w-64 shrink-0 border-r bg-background lg:block">
           <DashboardSidebar />

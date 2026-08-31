@@ -21,7 +21,7 @@ export async function getExperiments({
   let query = supabase
     .from("experiments")
     .select(
-      "id, title, slug, summary, content, cover_image_url, status, featured, created_at, updated_at",
+      "id, title, slug, summary, content, cover_image_url, status, featured, published, created_at, updated_at",
       { count: "exact" },
     )
     .order("created_at", { ascending: false })
@@ -58,7 +58,7 @@ export async function getExperimentById(id: string) {
   const { data, error } = await supabase
     .from("experiments")
     .select(
-      "id, title, slug, summary, content, cover_image_url, status, featured, created_at, updated_at",
+      "id, title, slug, summary, content, cover_image_url, status, featured, published, created_at, updated_at",
     )
     .eq("id", id)
     .maybeSingle();

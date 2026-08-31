@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 
 import { Brand } from "@/components/shared/brand";
+import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 import {
   Sheet,
   SheetContent,
@@ -48,6 +49,13 @@ export function MobileNav() {
           ))}
 
           <Link
+            href="/auth/login"
+            className="rounded-lg px-3 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            Sign in
+          </Link>
+
+          <Link
             href="/contact"
             className="mt-4 rounded-lg bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
           >
@@ -55,9 +63,12 @@ export function MobileNav() {
           </Link>
         </nav>
 
-        <p className="border-t pt-5 text-xs text-muted-foreground">
-          Built in Addis Ababa. Designed for everywhere.
-        </p>
+        <div className="flex items-center justify-between border-t pt-5">
+          <p className="text-xs text-muted-foreground">
+            Built in Addis Ababa.
+          </p>
+          <ThemeToggle />
+        </div>
       </SheetContent>
     </Sheet>
   );

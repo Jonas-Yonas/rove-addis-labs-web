@@ -27,7 +27,7 @@ export function SolutionsSection() {
     <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
         <div className="max-w-xl">
-          <p className="text-sm font-medium tracking-[0.18em] text-accent uppercase">
+          <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">
             Solutions
           </p>
 

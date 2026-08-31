@@ -22,7 +22,7 @@ export async function getProjects({
   let query = supabase
     .from("projects")
     .select(
-      "id, title, slug, client_name, description, status, featured, cover_image_url, created_at, updated_at",
+      "id, title, slug, client_name, description, status, featured, published, cover_image_url, created_at, updated_at",
       { count: "exact" },
     )
     .order("created_at", { ascending: false })
@@ -60,7 +60,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
   const { data, error } = await supabase
     .from("projects")
     .select(
-      "id, title, slug, client_name, description, content, cover_image_url, website_url, status, featured, created_at, updated_at",
+      "id, title, slug, client_name, description, content, cover_image_url, website_url, status, featured, published, created_at, updated_at",
     )
     .eq("id", id)
     .maybeSingle();

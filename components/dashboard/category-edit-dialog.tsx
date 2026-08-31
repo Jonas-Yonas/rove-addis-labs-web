@@ -19,7 +19,11 @@ interface EditableCategory extends CategoryFormInitial {
   id: string;
 }
 
-export function CategoryEditDialog({ category }: { category: EditableCategory }) {
+export function CategoryEditDialog({
+  category,
+}: {
+  category: EditableCategory;
+}) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -52,7 +56,9 @@ export function CategoryEditDialog({ category }: { category: EditableCategory })
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger render={<Button type="button" variant="outline" size="sm" />}>
+      <DialogTrigger
+        render={<Button type="button" variant="outline" size="sm" />}
+      >
         <Pencil className="mr-1.5 size-4" />
         Edit
       </DialogTrigger>

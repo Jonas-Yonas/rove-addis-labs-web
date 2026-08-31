@@ -21,7 +21,7 @@ export async function getProducts({
   let query = supabase
     .from("products")
     .select(
-      "id, name, slug, tagline, description, logo_url, cover_image_url, website_url, status, featured, created_at, updated_at",
+      "id, name, slug, tagline, description, logo_url, cover_image_url, website_url, status, featured, published, created_at, updated_at",
       { count: "exact" },
     )
     .order("created_at", { ascending: false })
@@ -58,7 +58,7 @@ export async function getProductById(id: string) {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id, name, slug, tagline, description, logo_url, cover_image_url, website_url, status, featured, created_at, updated_at",
+      "id, name, slug, tagline, description, logo_url, cover_image_url, website_url, status, featured, published, created_at, updated_at",
     )
     .eq("id", id)
     .maybeSingle();

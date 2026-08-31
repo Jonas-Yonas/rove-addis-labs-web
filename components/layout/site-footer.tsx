@@ -2,10 +2,31 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowUpRight } from "lucide-react";
 
 import { Brand } from "@/components/shared/brand";
 import { brand } from "@/config/brand";
-import { mainNavigation } from "@/config/navigation";
+
+const columns = [
+  {
+    heading: "Explore",
+    links: [
+      { label: "Solutions", href: "/solutions" },
+      { label: "Work", href: "/work" },
+      { label: "Products", href: "/products" },
+      { label: "Labs", href: "/labs" },
+      { label: "Insights", href: "/blog" },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "/contact" },
+      { label: "Sign in", href: "/auth/login" },
+    ],
+  },
+];
 
 export function SiteFooter() {
   const pathname = usePathname();
@@ -15,50 +36,59 @@ export function SiteFooter() {
   }
 
   return (
-    <footer className="border-t border-border/60">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
-          <div className="max-w-sm">
+    <footer className="relative mt-auto overflow-hidden border-t border-border/60 bg-muted/20">
+      <div className="absolute inset-x-0 top-0 -z-10 h-px bg-linear-to-r from-transparent via-accent/40 to-transparent" />
+
+      <div className="mx-auto max-w-7xl px-4 pt-20 pb-12 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+          <div className="max-w-md">
             <Brand compact />
 
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+            <p className="mt-5 text-sm leading-6 text-muted-foreground">
               {brand.description}
             </p>
 
-            <p className="mt-3 text-xs text-muted-foreground">
-              {brand.location}
-            </p>
-          </div>
-
-          <nav
-            className="grid grid-cols-2 gap-x-12 gap-y-3 sm:grid-cols-3"
-            aria-label="Footer navigation"
-          >
-            {mainNavigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {item.label}
-              </Link>
-            ))}
-
             <Link
               href="/contact"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-accent"
             >
-              Contact
+              Start a project
+              <ArrowUpRight className="size-4" />
             </Link>
-          </nav>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8 sm:gap-12 lg:justify-items-end">
+            {columns.map((column) => (
+              <nav key={column.heading} aria-label={column.heading}>
+                <p className="text-xs font-semibold tracking-[0.16em] text-foreground uppercase">
+                  {column.heading}
+                </p>
+
+                <ul className="mt-4 space-y-3">
+                  {column.links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {brand.name}. All rights reserved.
+            © {new Date().getFullYear()} {brand.name}
           </p>
 
-          <p>Built in Addis Ababa. Designed for everywhere.</p>
+          <p className="tracking-wide">
+            {brand.location} · Built for everywhere
+          </p>
         </div>
       </div>
     </footer>

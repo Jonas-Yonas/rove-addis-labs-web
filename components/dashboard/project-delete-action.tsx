@@ -29,7 +29,7 @@ export function ProjectDeleteAction({
 
   return (
     <DeleteConfirmDialog
-      title="Delete project?"
+      title="Delete Project?"
       description={`This will permanently delete "${projectTitle}" and its associated images. This action cannot be undone.`}
       actionLabel="Delete project"
       successMessage="Project deleted successfully."

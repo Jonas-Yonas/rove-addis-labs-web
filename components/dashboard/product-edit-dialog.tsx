@@ -36,6 +36,7 @@ interface ProductEditDialogProps {
     website_url: string | null;
     status: ProductStatus;
     featured: boolean;
+    published?: boolean;
   };
 }
 
@@ -56,7 +57,7 @@ export function ProductEditDialog({ product }: ProductEditDialogProps) {
 
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Edit product</DialogTitle>
+          <DialogTitle>Edit Product</DialogTitle>
         </DialogHeader>
 
         <ProductForm

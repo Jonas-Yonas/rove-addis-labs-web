@@ -26,6 +26,7 @@ interface ProjectFormProps {
     website_url?: string | null;
     status?: ProjectStatus;
     featured?: boolean;
+    published?: boolean;
     content?: string | null;
     cover_image_url?: string | null;
   };
@@ -268,6 +269,20 @@ export function ProjectForm({
 
         <Label htmlFor="featured" className="cursor-pointer">
           Featured project
+        </Label>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <Checkbox
+          id="published"
+          name="published"
+          value="true"
+          defaultChecked={initialValues?.published ?? true}
+          disabled={isPending}
+        />
+
+        <Label htmlFor="published" className="cursor-pointer">
+          Show on the public site
         </Label>
       </div>
 

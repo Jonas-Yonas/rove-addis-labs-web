@@ -23,6 +23,7 @@ export async function createProject(formData: FormData) {
   const websiteUrl = String(formData.get("website_url") ?? "").trim();
   const status = String(formData.get("status") ?? "PLANNED");
   const featured = formData.get("featured") === "true";
+  const published = formData.get("published") === "true";
 
   if (!title) {
     return {
@@ -70,6 +71,7 @@ export async function createProject(formData: FormData) {
     website_url: websiteUrl || null,
     status,
     featured,
+    published,
   });
 
   if (error) {
@@ -98,6 +100,7 @@ export async function updateProject(id: string, formData: FormData) {
   const content = String(formData.get("content") ?? "").trim();
   const status = String(formData.get("status") ?? "PLANNED");
   const featured = formData.get("featured") === "true";
+  const published = formData.get("published") === "true";
 
   // This is now a URL/path, NOT a File.
   const coverImageUrl = String(formData.get("cover_image_url") ?? "").trim();
@@ -157,6 +160,7 @@ export async function updateProject(id: string, formData: FormData) {
     content: content || null,
     status,
     featured,
+    published,
     ...(coverImageUrl ? { cover_image_url: coverImageUrl } : {}),
   };
 

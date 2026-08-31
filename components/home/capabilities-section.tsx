@@ -32,7 +32,7 @@ export function CapabilitiesSection() {
     <section className="border-y border-border/70 bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
-          <p className="text-sm font-medium tracking-[0.18em] text-accent uppercase">
+          <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">
             What we do
           </p>
 

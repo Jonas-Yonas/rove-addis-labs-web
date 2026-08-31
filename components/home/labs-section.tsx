@@ -28,7 +28,7 @@ export function LabsSection() {
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div>
-            <p className="text-sm font-medium tracking-[0.18em] text-accent uppercase">
+            <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">
               Rove Labs
             </p>
 

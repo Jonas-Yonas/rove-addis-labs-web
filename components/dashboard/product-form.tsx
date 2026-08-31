@@ -36,6 +36,7 @@ interface Product {
   website_url: string | null;
   status: ProductStatus;
   featured: boolean;
+  published?: boolean;
 }
 
 interface ProductFormProps {
@@ -67,6 +68,7 @@ interface ProductFormProps {
     website_url?: string | null;
     status?: ProductStatus;
     featured?: boolean;
+    published?: boolean;
   };
 
   onSuccess?: () => void;
@@ -387,6 +389,21 @@ export function ProductForm({
 
         <Label htmlFor="featured" className="cursor-pointer">
           Featured product
+        </Label>
+      </div>
+
+      {/* Public visibility */}
+      <div className="flex items-center gap-3">
+        <Checkbox
+          id="published"
+          name="published"
+          value="true"
+          defaultChecked={values?.published ?? true}
+          disabled={isPending}
+        />
+
+        <Label htmlFor="published" className="cursor-pointer">
+          Show on the public site
         </Label>
       </div>
 

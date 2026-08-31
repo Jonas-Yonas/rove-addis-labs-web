@@ -17,20 +17,28 @@ export function StatusBadge({ status, label, className }: StatusBadgeProps) {
         "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium",
         "border",
 
-        // Completed — success
-        normalizedStatus === "COMPLETED" &&
+        // Completed / Active — success
+        (normalizedStatus === "COMPLETED" || normalizedStatus === "ACTIVE") &&
           "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-300",
 
-        // In Progress — active
-        normalizedStatus === "IN_PROGRESS" &&
+        // Suspended — problem
+        normalizedStatus === "SUSPENDED" &&
+          "border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950/50 dark:text-red-300",
+
+        // In Progress / New — active, needs attention
+        (normalizedStatus === "IN_PROGRESS" || normalizedStatus === "NEW") &&
           "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950/50 dark:text-blue-300",
+
+        // Replied — success
+        normalizedStatus === "REPLIED" &&
+          "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-300",
 
         // Planned — pending
         normalizedStatus === "PLANNED" &&
           "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-300",
 
-        // Archived — inactive
-        normalizedStatus === "ARCHIVED" &&
+        // Archived / Inactive — dormant
+        (normalizedStatus === "ARCHIVED" || normalizedStatus === "INACTIVE") &&
           "border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400",
 
         // Live — currently active

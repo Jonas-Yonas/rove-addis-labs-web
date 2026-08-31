@@ -25,7 +25,7 @@ export function TagDeleteAction({ tagId, tagName }: TagDeleteActionProps) {
 
   return (
     <DeleteConfirmDialog
-      title="Delete tag?"
+      title="Delete Tag?"
       description={`This permanently deletes "${tagName}" and removes it from any posts. This action cannot be undone.`}
       actionLabel="Delete tag"
       triggerLabel="Delete"

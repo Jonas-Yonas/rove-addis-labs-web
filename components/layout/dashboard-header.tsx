@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { FlaskConical, FolderKanban, LayoutDashboard, Menu, Package, Settings } from "lucide-react";
 
 import { LogoutButton } from "@/components/auth/logout-button";
+import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 import {
   Sheet,
   SheetContent,
@@ -68,7 +69,10 @@ export function DashboardHeader() {
           </div>
         </div>
 
-        <LogoutButton />
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <LogoutButton />
+        </div>
       </div>
     </header>
   );
