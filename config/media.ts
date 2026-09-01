@@ -29,4 +29,12 @@ export const media = {
 
   /** About page — team / place. */
   about: unsplash("1522071820081-009f0129c71c", 1100),
+
+  /** Labs page — dark, tech / AI imagery. */
+  labsHero: unsplash("1526374965328-7f61d4dc18c5", 1200),
+  labsFallbacks: [
+    unsplash("1620712943543-bcc4688e7485", 800),
+    unsplash("1550751827-4bd374c3f58b", 800),
+    unsplash("1451187580459-43490279c0fa", 800),
+  ],
 };
