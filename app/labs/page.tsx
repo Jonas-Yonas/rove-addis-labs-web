@@ -18,17 +18,18 @@ export default async function LabsPage() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-border/60">
-        <div className="absolute inset-y-0 right-0 hidden w-[46%] lg:block">
+        <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
           <Image
             src={media.labsHero}
             alt=""
             fill
             priority
             className="object-cover"
-            sizes="46vw"
+            sizes="58vw"
             unoptimized
           />
-          <div className="absolute inset-0 bg-linear-to-r from-background via-background/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-r from-background from-15% via-background/70 via-45% to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background/60 to-transparent" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
