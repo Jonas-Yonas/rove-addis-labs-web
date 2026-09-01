@@ -1,58 +1,52 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  Check,
+  Blocks,
+  Cloud,
   Code2,
-  Layers3,
-  RefreshCw,
+  Smartphone,
 } from "lucide-react";
 
 import { BrandGlyph, DotGrid } from "@/components/public/decor";
 import { PublicHero } from "@/components/public/public-hero";
+import { media } from "@/config/media";
 
 export const metadata: Metadata = {
   title: "Solutions",
   description:
-    "Custom software, digital transformation, and product development from Rove Addis Labs.",
+    "Custom software, mobile apps, SaaS platforms, and system integration from Rove Addis Labs.",
 };
 
 const solutions = [
   {
-    number: "01",
     icon: Code2,
-    title: "Custom Software",
+    title: "Web Applications",
     description:
-      "Purpose-built applications and platforms designed around your organization's workflows and goals — not off-the-shelf compromises.",
-    points: [
-      "Internal tools and operational platforms",
-      "Customer-facing web and mobile apps",
-      "System integrations and automation",
-    ],
+      "Robust, scalable, and secure web applications built with modern technologies and built to last.",
+    image: media.solutions.web,
   },
   {
-    number: "02",
-    icon: RefreshCw,
-    title: "Digital Transformation",
+    icon: Smartphone,
+    title: "Mobile Solutions",
     description:
-      "Modernize processes, connect systems, and create better digital experiences for the people who use them every day.",
-    points: [
-      "Process mapping and workflow redesign",
-      "Legacy modernization and migration",
-      "Data pipelines and reporting",
-    ],
+      "Cross-platform mobile apps that deliver seamless experiences on every device.",
+    image: media.solutions.mobile,
   },
   {
-    number: "03",
-    icon: Layers3,
-    title: "Product Development",
+    icon: Cloud,
+    title: "SaaS Platforms",
     description:
-      "From discovery and MVPs to production systems and continuous improvement — we help you build the right thing, then keep making it better.",
-    points: [
-      "Product discovery and prototyping",
-      "MVP design and build",
-      "Ongoing engineering and iteration",
-    ],
+      "End-to-end SaaS products that scale with your business — from architecture to launch.",
+    image: media.solutions.saas,
+  },
+  {
+    icon: Blocks,
+    title: "System Integration",
+    description:
+      "Seamlessly connect systems and automate the workflows that run your organization.",
+    image: media.solutions.integration,
   },
 ];
 
@@ -61,66 +55,69 @@ export default function SolutionsPage() {
     <>
       <PublicHero
         eyebrow="Solutions"
-        title="We solve problems, not just build software."
-        description="Whether you're building something new or improving something that already exists, we work across product, engineering, and technology to deliver practical results."
+        title="Solutions that drive real impact."
+        description="We design and build custom digital solutions tailored to your business challenges and goals."
       />
 
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {solutions.map((solution) => {
             const Icon = solution.icon;
 
             return (
-              <div
-                key={solution.number}
-                className="relative overflow-hidden rounded-2xl border bg-card p-7"
+              <Link
+                key={solution.title}
+                href="/contact"
+                className="group flex flex-col overflow-hidden rounded-2xl border bg-card transition-all duration-200 hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5"
               >
-                <span
-                  aria-hidden="true"
-                  className="absolute -top-4 right-2 text-7xl font-bold text-foreground/[0.04]"
-                >
-                  {solution.number}
-                </span>
+                <div className="relative aspect-16/11 overflow-hidden bg-muted">
+                  <Image
+                    src={solution.image}
+                    alt=""
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    sizes="(max-width: 1024px) 100vw, 25vw"
+                    unoptimized
+                  />
+                  <span className="absolute left-4 top-4 flex size-9 items-center justify-center rounded-lg border border-accent/20 bg-background/95 text-accent shadow-sm backdrop-blur">
+                    <Icon className="size-4" />
+                  </span>
+                </div>
 
-                <span className="relative flex size-11 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                  <Icon className="size-5" />
-                </span>
-
-                <h2 className="relative mt-6 text-xl font-semibold tracking-tight">
-                  {solution.title}
-                </h2>
-                <p className="relative mt-3 text-sm leading-6 text-muted-foreground">
-                  {solution.description}
-                </p>
-
-                <ul className="relative mt-5 space-y-2.5 border-t pt-5 text-sm">
-                  {solution.points.map((point) => (
-                    <li key={point} className="flex items-start gap-2.5">
-                      <Check className="mt-0.5 size-4 shrink-0 text-accent" />
-                      <span className="text-muted-foreground">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <div className="flex flex-1 flex-col p-5">
+                  <h2 className="font-semibold tracking-tight">
+                    {solution.title}
+                  </h2>
+                  <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+                    {solution.description}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent">
+                    Learn more
+                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </div>
+              </Link>
             );
           })}
         </div>
 
         <div className="relative mt-8 overflow-hidden rounded-2xl bg-[#0F2933] px-6 py-12 text-white sm:px-10 sm:py-14">
           <DotGrid className="text-white/10 mask-[radial-gradient(ellipse_50%_100%_at_0%_50%,black,transparent)]" />
-          <BrandGlyph className="absolute -right-8 -bottom-10 size-56 text-[#28B5B1]/15" />
+          <BrandGlyph className="absolute -bottom-10 -right-8 size-56 text-[#28B5B1]/15" />
 
-          <div className="relative max-w-xl">
-            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              Have something in mind?
-            </h2>
-            <p className="mt-2 text-white/65">
-              Tell us what you&apos;re working on and we&apos;ll get back to you
-              with how we can help.
-            </p>
+          <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-xl">
+              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                Not sure where to start?
+              </h2>
+              <p className="mt-2 text-white/65">
+                Tell us what you&apos;re working on and we&apos;ll help you scope
+                the right solution.
+              </p>
+            </div>
             <Link
               href="/contact"
-              className="mt-6 inline-flex h-11 items-center gap-2 rounded-md bg-[#28B5B1] px-6 text-sm font-medium text-[#0F2933] transition-transform hover:-translate-y-0.5"
+              className="inline-flex h-11 shrink-0 items-center gap-2 rounded-md bg-[#28B5B1] px-6 text-sm font-medium text-[#0F2933] transition-transform hover:-translate-y-0.5"
             >
               Start a conversation
               <ArrowRight className="size-4" />

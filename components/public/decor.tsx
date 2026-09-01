@@ -6,7 +6,7 @@ export function DotGrid({ className }: { className?: string }) {
     <svg
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-0 -z-10 h-full w-full text-foreground/[0.05]",
+        "pointer-events-none absolute inset-0 -z-10 h-full w-full text-foreground/5",
         className,
       )}
     >

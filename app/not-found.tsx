@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <section className="relative flex min-h-[70vh] items-center overflow-hidden">
       <DotGrid className="mask-[radial-gradient(ellipse_50%_60%_at_50%_40%,black,transparent)]" />
-      <BrandGlyph className="absolute top-1/2 left-1/2 -z-10 size-[32rem] -translate-x-1/2 -translate-y-1/2 text-accent/[0.06]" />
+      <BrandGlyph className="absolute top-1/2 left-1/2 -z-10 size-[32rem] -translate-x-1/2 -translate-y-1/2 text-accent/6" />
 
       <div className="mx-auto w-full max-w-2xl px-4 text-center sm:px-6">
         <p className="text-xs font-semibold tracking-[0.22em] text-accent uppercase">
