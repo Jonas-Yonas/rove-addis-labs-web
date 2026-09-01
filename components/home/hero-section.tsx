@@ -9,6 +9,7 @@ import {
   FolderKanban,
   MapPin,
   Package,
+  TrendingUp,
 } from "lucide-react";
 
 import { media } from "@/config/media";
@@ -19,20 +20,17 @@ const floatingCards = [
   {
     icon: Cloud,
     title: "SaaS Platforms",
-    body: "Scalable, secure cloud products",
-    className: "right-4 top-8 lg:-right-6",
+    body: "Scalable, secure cloud solutions",
   },
   {
     icon: Bot,
     title: "AI & Automation",
     body: "Intelligent systems that drive efficiency",
-    className: "right-6 top-1/2 lg:-right-10",
   },
   {
     icon: Boxes,
     title: "Digital Products",
     body: "User-centered products that create impact",
-    className: "bottom-8 right-10 lg:-right-4",
   },
 ];
 
@@ -97,37 +95,49 @@ export async function HeroSection() {
           </dl>
         </div>
 
-        <div className="relative">
-          <div className="relative aspect-4/3 overflow-hidden rounded-3xl border bg-muted shadow-lg sm:aspect-16/12">
+        <div className="relative lg:pr-14">
+          <div className="relative aspect-4/3 overflow-hidden rounded-3xl border bg-muted shadow-lg">
             <Image
               src={media.heroSkyline}
               alt="City skyline at dusk"
               fill
               priority
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 55vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
               unoptimized
             />
-            <div className="absolute inset-0 bg-linear-to-tr from-[#0F2933]/45 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#0F2933]/40 via-transparent to-transparent" />
+
+            <span className="absolute left-4 top-4 rounded-md bg-black/35 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+              {brand.location}
+            </span>
+
+            <span className="absolute right-4 bottom-4 flex size-11 items-center justify-center rounded-full border bg-card text-accent shadow-lg">
+              <TrendingUp className="size-5" />
+            </span>
           </div>
 
-          {floatingCards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <div
-                key={card.title}
-                className={`absolute hidden w-52 rounded-xl border bg-card/95 p-3 shadow-xl backdrop-blur sm:block ${card.className}`}
-              >
-                <span className="flex size-8 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                  <Icon className="size-4" />
-                </span>
-                <p className="mt-2 text-sm font-semibold">{card.title}</p>
-                <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
-                  {card.body}
-                </p>
-              </div>
-            );
-          })}
+          <div className="absolute right-0 top-1/2 hidden w-56 -translate-y-1/2 translate-x-4 flex-col gap-3 lg:flex">
+            {floatingCards.map((card) => {
+              const Icon = card.icon;
+              return (
+                <div
+                  key={card.title}
+                  className="flex gap-3 rounded-xl border bg-card/95 p-3 shadow-xl backdrop-blur"
+                >
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                    <Icon className="size-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold">{card.title}</p>
+                    <p className="mt-0.5 text-xs leading-4 text-muted-foreground">
+                      {card.body}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
