@@ -222,30 +222,29 @@ export default async function DashboardPage() {
             <Link
               key={card.label}
               href={card.href}
-              className="group rounded-xl border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-5"
+              className="group rounded-xl border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-5">
-                  <span
-                    className={cn(
-                      "flex size-10 shrink-0 items-center justify-center rounded-lg",
-                      tone.chip,
-                    )}
-                  >
-                    <Icon className="size-5" />
-                  </span>
-                  <span
-                    className="text-[1.75rem] font-semibold leading-none tracking-tight tabular-nums"
-                    title={card.value.toLocaleString()}
-                  >
-                    {compact(card.value)}
-                  </span>
-                </div>
-                <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                  {card.label}
+                </p>
+                <span
+                  className={cn(
+                    "flex size-9 shrink-0 items-center justify-center rounded-lg",
+                    tone.chip,
+                  )}
+                >
+                  <Icon className="size-4" />
+                </span>
               </div>
 
-              <p className="mt-4 text-sm font-medium">{card.label}</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">{card.hint}</p>
+              <p
+                className="mt-3 text-3xl font-bold tracking-tight tabular-nums"
+                title={card.value.toLocaleString()}
+              >
+                {compact(card.value)}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">{card.hint}</p>
             </Link>
           );
         })}
