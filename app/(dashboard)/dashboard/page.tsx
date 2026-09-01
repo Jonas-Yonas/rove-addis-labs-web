@@ -26,27 +26,27 @@ type Tone = "blue" | "violet" | "amber" | "sky" | "emerald" | "rose";
 
 const TONE: Record<Tone, { chip: string; dot: string }> = {
   blue: {
-    chip: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+    chip: "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
     dot: "bg-blue-500",
   },
   violet: {
-    chip: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
+    chip: "bg-violet-100 text-violet-800 dark:bg-violet-500/15 dark:text-violet-300",
     dot: "bg-violet-500",
   },
   amber: {
-    chip: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    chip: "bg-amber-100 text-amber-900 dark:bg-amber-500/15 dark:text-amber-300",
     dot: "bg-amber-500",
   },
   sky: {
-    chip: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+    chip: "bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300",
     dot: "bg-sky-500",
   },
   emerald: {
-    chip: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    chip: "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300",
     dot: "bg-emerald-500",
   },
   rose: {
-    chip: "bg-rose-500/10 text-rose-600 dark:text-rose-400",
+    chip: "bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-300",
     dot: "bg-rose-500",
   },
 };
@@ -222,29 +222,29 @@ export default async function DashboardPage() {
             <Link
               key={card.label}
               href={card.href}
-              className="group rounded-xl border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group rounded-xl border bg-card p-4 shadow-sm transition-colors hover:border-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <div className="flex items-start justify-between gap-3">
-                <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              <div className="flex items-start justify-between">
+                <p className="text-[11px] font-medium tracking-[0.08em] text-muted-foreground uppercase">
                   {card.label}
                 </p>
                 <span
                   className={cn(
-                    "flex size-9 shrink-0 items-center justify-center rounded-lg",
+                    "flex size-7 shrink-0 items-center justify-center rounded-md",
                     tone.chip,
                   )}
                 >
-                  <Icon className="size-4" />
+                  <Icon className="size-3.5" />
                 </span>
               </div>
 
               <p
-                className="mt-3 text-3xl font-bold tracking-tight tabular-nums"
+                className="mt-2 text-3xl font-bold leading-none tabular-nums"
                 title={card.value.toLocaleString()}
               >
                 {compact(card.value)}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">{card.hint}</p>
+              <p className="mt-1.5 text-xs text-muted-foreground">{card.hint}</p>
             </Link>
           );
         })}
