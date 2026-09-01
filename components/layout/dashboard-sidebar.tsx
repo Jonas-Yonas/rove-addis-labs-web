@@ -169,7 +169,11 @@ const navigation = [
   },
 ];
 
-export function DashboardSidebar() {
+export function DashboardSidebar({
+  unreadMessages = 0,
+}: {
+  unreadMessages?: number;
+}) {
   const pathname = usePathname();
 
   return (
@@ -191,6 +195,13 @@ export function DashboardSidebar() {
                     (item.href !== "/dashboard" &&
                       pathname.startsWith(`${item.href}/`));
 
+                  const badge =
+                    item.href === "/dashboard/messages" && unreadMessages > 0
+                      ? unreadMessages > 99
+                        ? "99+"
+                        : String(unreadMessages)
+                      : null;
+
                   return (
                     <Link
                       key={item.href}
@@ -204,6 +215,18 @@ export function DashboardSidebar() {
                     >
                       <Icon className="size-4 shrink-0" />
                       <span>{item.label}</span>
+                      {badge && (
+                        <span
+                          className={[
+                            "ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-semibold tabular-nums",
+                            active
+                              ? "bg-primary-foreground/20 text-primary-foreground"
+                              : "bg-accent text-accent-foreground",
+                          ].join(" ")}
+                        >
+                          {badge}
+                        </span>
+                      )}
                     </Link>
                   );
                 })}

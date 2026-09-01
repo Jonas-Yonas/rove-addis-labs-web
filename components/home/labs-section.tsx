@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight, Bot, Workflow, FlaskConical } from "lucide-react";
 
+import { BrandGlyph, DotGrid } from "@/components/public/decor";
+
 const experiments = [
   {
     icon: Bot,
@@ -24,10 +26,13 @@ const experiments = [
 
 export function LabsSection() {
   return (
-    <section className="bg-muted/40">
+    <section className="relative overflow-hidden bg-muted/40">
+      <DotGrid className="mask-[radial-gradient(ellipse_40%_60%_at_90%_100%,black,transparent)]" />
+
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-          <div>
+          <div className="relative">
+            <BrandGlyph className="absolute -left-8 -top-10 -z-10 size-40 text-accent/10" />
             <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">
               Rove Labs
             </p>

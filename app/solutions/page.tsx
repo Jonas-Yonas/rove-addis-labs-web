@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Code2,
+  Layers3,
+  RefreshCw,
+} from "lucide-react";
 
+import { BrandGlyph, DotGrid } from "@/components/public/decor";
 import { PublicHero } from "@/components/public/public-hero";
 
 export const metadata: Metadata = {
@@ -13,6 +20,7 @@ export const metadata: Metadata = {
 const solutions = [
   {
     number: "01",
+    icon: Code2,
     title: "Custom Software",
     description:
       "Purpose-built applications and platforms designed around your organization's workflows and goals — not off-the-shelf compromises.",
@@ -24,6 +32,7 @@ const solutions = [
   },
   {
     number: "02",
+    icon: RefreshCw,
     title: "Digital Transformation",
     description:
       "Modernize processes, connect systems, and create better digital experiences for the people who use them every day.",
@@ -35,6 +44,7 @@ const solutions = [
   },
   {
     number: "03",
+    icon: Layers3,
     title: "Product Development",
     description:
       "From discovery and MVPs to production systems and continuous improvement — we help you build the right thing, then keep making it better.",
@@ -56,51 +66,66 @@ export default function SolutionsPage() {
       />
 
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <div className="divide-y divide-border border-y border-border">
-          {solutions.map((solution) => (
-            <div
-              key={solution.number}
-              className="grid gap-6 py-10 md:grid-cols-[80px_1fr]"
-            >
-              <span className="text-sm font-medium text-accent">
-                {solution.number}
-              </span>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {solutions.map((solution) => {
+            const Icon = solution.icon;
 
-              <div>
-                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            return (
+              <div
+                key={solution.number}
+                className="relative overflow-hidden rounded-2xl border bg-card p-7"
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-4 right-2 text-7xl font-bold text-foreground/[0.04]"
+                >
+                  {solution.number}
+                </span>
+
+                <span className="relative flex size-11 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                  <Icon className="size-5" />
+                </span>
+
+                <h2 className="relative mt-6 text-xl font-semibold tracking-tight">
                   {solution.title}
                 </h2>
-                <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
+                <p className="relative mt-3 text-sm leading-6 text-muted-foreground">
                   {solution.description}
                 </p>
-                <ul className="mt-5 grid gap-2 text-sm text-muted-foreground sm:grid-cols-3">
+
+                <ul className="relative mt-5 space-y-2.5 border-t pt-5 text-sm">
                   {solution.points.map((point) => (
-                    <li key={point} className="flex items-start gap-2">
-                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
-                      {point}
+                    <li key={point} className="flex items-start gap-2.5">
+                      <Check className="mt-0.5 size-4 shrink-0 text-accent" />
+                      <span className="text-muted-foreground">{point}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        <div className="mt-16 rounded-2xl border bg-card p-8 sm:p-10">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            Have something in mind?
-          </h2>
-          <p className="mt-2 max-w-xl text-muted-foreground">
-            Tell us what you&apos;re working on and we&apos;ll get back to you
-            with how we can help.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-6 inline-flex h-11 items-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"
-          >
-            Start a conversation
-            <ArrowRight className="size-4" />
-          </Link>
+        <div className="relative mt-8 overflow-hidden rounded-2xl bg-[#0F2933] px-6 py-12 text-white sm:px-10 sm:py-14">
+          <DotGrid className="text-white/10 mask-[radial-gradient(ellipse_50%_100%_at_0%_50%,black,transparent)]" />
+          <BrandGlyph className="absolute -right-8 -bottom-10 size-56 text-[#28B5B1]/15" />
+
+          <div className="relative max-w-xl">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              Have something in mind?
+            </h2>
+            <p className="mt-2 text-white/65">
+              Tell us what you&apos;re working on and we&apos;ll get back to you
+              with how we can help.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-6 inline-flex h-11 items-center gap-2 rounded-md bg-[#28B5B1] px-6 text-sm font-medium text-[#0F2933] transition-transform hover:-translate-y-0.5"
+            >
+              Start a conversation
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </>

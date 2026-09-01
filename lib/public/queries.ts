@@ -1,6 +1,35 @@
 import { createClient } from "@/lib/supabase/server";
 
 // ---------------------------------------------------------------------------
+// Counts (for the home hero)
+// ---------------------------------------------------------------------------
+
+export async function getPublicCounts() {
+  const supabase = await createClient();
+
+  const [products, projects, experiments] = await Promise.all([
+    supabase
+      .from("products")
+      .select("id", { count: "exact", head: true })
+      .eq("published", true),
+    supabase
+      .from("projects")
+      .select("id", { count: "exact", head: true })
+      .eq("published", true),
+    supabase
+      .from("experiments")
+      .select("id", { count: "exact", head: true })
+      .eq("published", true),
+  ]);
+
+  return {
+    products: products.count ?? 0,
+    projects: projects.count ?? 0,
+    experiments: experiments.count ?? 0,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Insights (posts)
 // ---------------------------------------------------------------------------
 

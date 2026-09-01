@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { BrandGlyph, DotGrid } from "@/components/public/decor";
+
 export function PublicHero({
   eyebrow,
   title,
@@ -13,8 +15,11 @@ export function PublicHero({
 }) {
   return (
     <div className="relative overflow-hidden border-b border-border/60">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_12%,rgba(40,181,177,0.11),transparent_40%)]" />
+      <DotGrid className="mask-[radial-gradient(ellipse_60%_80%_at_20%_0%,black,transparent)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_82%_10%,rgba(40,181,177,0.12),transparent_42%)]" />
       <div className="absolute inset-x-0 top-0 -z-10 h-px bg-linear-to-r from-transparent via-accent/30 to-transparent" />
+
+      <BrandGlyph className="absolute -top-16 right-4 -z-10 hidden size-72 text-accent/[0.07] sm:block lg:right-16 lg:size-96" />
 
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">
