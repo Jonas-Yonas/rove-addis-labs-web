@@ -2,14 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  Bot,
-  Boxes,
   Cloud,
   FlaskConical,
   FolderKanban,
+  Lightbulb,
   MapPin,
   Package,
-  TrendingUp,
+  Sparkles,
 } from "lucide-react";
 
 import { media } from "@/config/media";
@@ -17,50 +16,89 @@ import { brand } from "@/config/brand";
 import { getPublicCounts } from "@/lib/public/queries";
 
 const floatingCards = [
+  { icon: Lightbulb, title: "Innovative Solutions", pos: "left-3 top-[22%]" },
   {
     icon: Cloud,
-    title: "SaaS Platforms",
-    body: "Scalable, secure cloud solutions",
+    title: "Digital Transformation",
+    pos: "right-3 top-[14%]",
   },
-  {
-    icon: Bot,
-    title: "AI & Automation",
-    body: "Intelligent systems that drive efficiency",
-  },
-  {
-    icon: Boxes,
-    title: "Digital Products",
-    body: "User-centered products that create impact",
-  },
+  { icon: MapPin, title: "Made for Ethiopia", pos: "right-8 bottom-[20%]" },
 ];
 
 export async function HeroSection() {
   const counts = await getPublicCounts();
 
   const stats = [
-    { icon: FolderKanban, value: `${counts.projects}+`, label: "Projects", show: counts.projects > 0 },
-    { icon: Package, value: `${counts.products}+`, label: "Products", show: counts.products > 0 },
-    { icon: FlaskConical, value: `${counts.experiments}+`, label: "Labs", show: counts.experiments > 0 },
-    { icon: MapPin, value: "Addis Ababa", label: "Where we build", show: true },
-  ].filter((stat) => stat.show);
+    {
+      icon: Package,
+      value: `${Math.max(counts.products, 1)}+`,
+      label: "Products & platforms",
+    },
+    {
+      icon: FolderKanban,
+      value: `${Math.max(counts.projects, 1)}+`,
+      label: "Projects delivered",
+    },
+    {
+      icon: FlaskConical,
+      value: `${Math.max(counts.experiments, 1)}+`,
+      label: "Experiments",
+    },
+    { icon: Sparkles, value: "100%", label: "Addis-built team" },
+  ];
 
   return (
-    <section className="relative overflow-hidden border-b border-border/60">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_70%_0%,rgba(40,181,177,0.1),transparent_45%)]" />
+    <section className="relative overflow-hidden bg-background">
+      {/* Full-bleed skyline on the right */}
+      <div className="absolute inset-y-0 right-0 hidden w-[46%] lg:block xl:w-[48%]">
+        <Image
+          src={media.heroSkyline}
+          alt="Addis Ababa skyline"
+          fill
+          priority
+          className="object-cover"
+          sizes="48vw"
+          unoptimized
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-background via-background/35 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-background/50 to-transparent" />
 
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 pt-14 pb-12 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-10 lg:px-8 lg:pt-20 lg:pb-16">
-        <div>
-          <p className="text-xs font-semibold tracking-[0.22em] text-accent uppercase">
-            {brand.name}
-          </p>
+        <span className="absolute left-6 top-6 rounded-md bg-black/35 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+          {brand.location}
+        </span>
 
-          <h1 className="mt-5 text-balance text-4xl font-semibold tracking-[-0.03em] sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-            We build software that{" "}
-            <span className="text-accent">moves ideas forward.</span>
+        {floatingCards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <div
+              key={card.title}
+              className={`absolute flex items-center gap-2.5 rounded-xl border bg-card/95 px-3.5 py-2.5 text-sm font-semibold shadow-xl backdrop-blur ${card.pos}`}
+            >
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                <Icon className="size-4" />
+              </span>
+              {card.title}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-xl py-14 sm:py-20 lg:py-28">
+          <div className="inline-flex items-center gap-3 text-xs font-semibold tracking-[0.2em] text-accent uppercase">
+            <span className="h-px w-8 bg-accent" />
+            Building what matters
+          </div>
+
+          <h1 className="mt-6 text-balance text-4xl font-semibold tracking-[-0.03em] sm:text-5xl lg:text-6xl lg:leading-[1.05]">
+            Technology for{" "}
+            <span className="text-accent">a smarter Ethiopia.</span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-            {brand.description}
+          <p className="mt-6 text-lg leading-8 text-muted-foreground">
+            {brand.name} builds software products, digital solutions, and
+            intelligent systems that power businesses, organizations, and
+            communities.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -75,71 +113,51 @@ export async function HeroSection() {
               href="/contact"
               className="inline-flex h-11 items-center justify-center rounded-md border border-border bg-background px-6 text-sm font-medium transition-colors hover:border-accent/50 hover:bg-muted"
             >
-              Let&apos;s talk
+              Get in touch
             </Link>
           </div>
-
-          <dl className="mt-10 grid max-w-lg grid-cols-2 gap-x-8 gap-y-5 border-t border-border/70 pt-8 sm:grid-cols-4 sm:gap-x-4">
-            {stats.map((stat) => {
-              const Icon = stat.icon;
-              return (
-                <div key={stat.label} className="flex flex-col gap-1">
-                  <Icon className="size-4 text-accent" />
-                  <dd className="text-lg font-semibold tracking-tight">
-                    {stat.value}
-                  </dd>
-                  <dt className="text-xs text-muted-foreground">{stat.label}</dt>
-                </div>
-              );
-            })}
-          </dl>
         </div>
 
-        <div className="relative lg:pr-14">
-          <div className="relative aspect-4/3 overflow-hidden rounded-3xl border bg-muted shadow-lg">
-            <Image
-              src={media.heroSkyline}
-              alt="City skyline at dusk"
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              unoptimized
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-[#0F2933]/40 via-transparent to-transparent" />
-
-            <span className="absolute left-4 top-4 rounded-md bg-black/35 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
-              {brand.location}
-            </span>
-
-            <span className="absolute right-4 bottom-4 flex size-11 items-center justify-center rounded-full border bg-card text-accent shadow-lg">
-              <TrendingUp className="size-5" />
-            </span>
-          </div>
-
-          <div className="absolute right-0 top-1/2 hidden w-56 -translate-y-1/2 translate-x-4 flex-col gap-3 lg:flex">
-            {floatingCards.map((card) => {
-              const Icon = card.icon;
-              return (
-                <div
-                  key={card.title}
-                  className="flex gap-3 rounded-xl border bg-card/95 p-3 shadow-xl backdrop-blur"
-                >
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                    <Icon className="size-4" />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold">{card.title}</p>
-                    <p className="mt-0.5 text-xs leading-4 text-muted-foreground">
-                      {card.body}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        {/* Mobile image */}
+        <div className="relative -mx-4 mb-4 aspect-16/10 overflow-hidden sm:-mx-6 lg:hidden">
+          <Image
+            src={media.heroSkyline}
+            alt="Addis Ababa skyline"
+            fill
+            className="object-cover"
+            sizes="100vw"
+            unoptimized
+          />
         </div>
       </div>
+
+      {/* Overlapping stats card */}
+      <div className="relative z-10 mx-auto -mb-10 max-w-4xl px-4 sm:px-6 lg:-mb-12 lg:px-8">
+        <dl className="grid grid-cols-2 overflow-hidden rounded-2xl border bg-card shadow-xl sm:grid-cols-4">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={stat.label}
+                className={`px-5 py-6 text-center ${
+                  index % 2 === 1 ? "border-l" : ""
+                } ${index >= 2 ? "border-t sm:border-t-0" : ""} ${
+                  index >= 1 ? "sm:border-l" : ""
+                }`}
+              >
+                <Icon className="mx-auto size-4 text-accent" />
+                <dd className="mt-2 text-2xl font-semibold tracking-tight">
+                  {stat.value}
+                </dd>
+                <dt className="mt-0.5 text-xs text-muted-foreground">
+                  {stat.label}
+                </dt>
+              </div>
+            );
+          })}
+        </dl>
+      </div>
+      <div className="h-12 bg-muted/30 lg:h-14" />
     </section>
   );
 }
