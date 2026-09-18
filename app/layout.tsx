@@ -51,21 +51,11 @@ export const metadata: Metadata = {
     description: brand.description,
     url: siteUrl,
     locale: "en_US",
-    images: [
-      {
-        url: "/brand/rove-og.png",
-        width: 1200,
-        height: 630,
-        alt: "Rove Addis",
-      },
-    ],
   },
-
   twitter: {
     card: "summary_large_image",
     title: `${brand.name} — ${brand.tagline}`,
     description: brand.description,
-    images: ["/brand/rove-og.png"],
   },
 };
 
